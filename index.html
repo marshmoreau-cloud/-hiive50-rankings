@@ -98,8 +98,12 @@ tr.tier-sep td{background:var(--bg2);font-size:10px;font-weight:600;color:var(--
 .mobile-list{display:none;padding:0 16px 40px;}
 .tier-label-mob{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:12px 0 6px;border-top:1px solid var(--border);margin-top:4px;}
 .tier-label-mob:first-child{border-top:none;}
-.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;}
+.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
 .company-card:hover,.company-card.active{border-color:var(--border-accent);box-shadow:var(--glow);}
+/* Expand panel sits outside the card as a sibling so nothing clips its height */
+.card-exp-panel{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);margin-bottom:8px;}
+.company-card.expanded{border-radius:var(--radius) var(--radius) 0 0;margin-bottom:0;border-color:var(--border-accent);}
+.company-card.expanded+.card-exp-panel{border-color:var(--border-accent);}
 .card-main{padding:14px 14px 12px;display:flex;align-items:flex-start;gap:10px;}
 .card-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;padding-top:2px;}
 .card-info{flex:1;min-width:0;}
@@ -226,12 +230,12 @@ tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 768px) {
-  .mobile-list{display:none;}
+  .desktop-table{display:none;}
+  .mobile-list{display:block;}
   .stats-row{grid-template-columns:1fr 1fr;gap:8px;padding:16px 16px 0;}
   .method-bar{display:none;}
   .controls{padding:12px 16px 12px;gap:6px;}
-  .table-wrap{padding:0 0 40px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .desktop-table{min-width:600px;}
+  .table-wrap{padding:0 16px 40px;}
   .site-header{padding:14px 16px;}
   .site-title{font-size:13px;}
   .ov-grid{grid-template-columns:1fr 1fr;}
@@ -244,6 +248,7 @@ tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
 @media (max-width: 480px) {
   .stats-row{grid-template-columns:1fr 1fr;gap:6px;padding:12px 12px 0;}
   .controls{padding:10px 12px 10px;}
+  .mobile-list{padding:0 12px 32px;}
   .exp-content{padding:14px 12px;}
 }
 
@@ -343,7 +348,6 @@ tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
   <span class="result-count" id="countLbl"></span>
 </div>
 
-<div class="table-scroll-hint">← scroll to see all columns</div>
 <div class="table-wrap">
 <!-- Desktop table -->
 <table class="desktop-table">
@@ -1328,14 +1332,14 @@ function tog(id,c){
     if(pi)pi.classList.remove('open');
     if(pr)pr.classList.remove('active');
     if(pc)pc.classList.remove('open');
-    if(mc){mc.classList.remove('active');const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.remove('open');}
+    if(mc){mc.classList.remove('active','expanded');const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.remove('open');}
   }
   const isOpen=inner.classList.contains('open');
   inner.classList.toggle('open',!isOpen);
   const dr=document.getElementById(`r-${id}`);if(dr)dr.classList.toggle('active',!isOpen);
   const ch=document.getElementById(`c-${id}`);if(ch)ch.classList.toggle('open',!isOpen);
   const mc=document.getElementById(`mc-${id}`);
-  if(mc){mc.classList.toggle('active',!isOpen);const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.toggle('open',!isOpen);}
+  if(mc){mc.classList.toggle('active',!isOpen);mc.classList.toggle('expanded',!isOpen);const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.toggle('open',!isOpen);}
   if(!isOpen&&c)loadTabContent(c);
   expanded=isOpen?null:id;
 }
@@ -1413,6 +1417,8 @@ function renderMobile(data){
       ml.appendChild(lbl);lastTier=t;
     }
     rank++;
+    // Card: visible tile only — NO expand panel inside it.
+    // Keeping expand outside means nothing constrains its height.
     const card=document.createElement('div');
     card.className=`company-card ${trow(t)}`;card.id=`mc-${c.id}`;
     card.onclick=()=>tog(c.id,c);
@@ -1433,9 +1439,13 @@ function renderMobile(data){
         <div class="card-metric"><div class="card-metric-lbl">Impl. cap</div><div class="card-metric-val">${mc!==null?fmtMcap(mc):'—'}</div></div>
         <div class="card-metric"><div class="card-metric-lbl">3M trend</div><div class="card-metric-val">${tr(c.trend)}</div></div>
         <div class="card-metric"><div class="card-metric-lbl">Score</div><div class="card-metric-val">${c.gp?score.toFixed(2):'n/a'}</div></div>
-      </div>
-      ${buildExpand(c.id,hasTh)}`;
+      </div>`;
     ml.appendChild(card);
+    // Expand panel as a sibling AFTER the card — not inside it.
+    const panel=document.createElement('div');
+    panel.className='card-exp-panel';
+    panel.innerHTML=buildExpand(c.id,hasTh);
+    ml.appendChild(panel);
   });
 }
 
