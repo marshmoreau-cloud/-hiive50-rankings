@@ -98,9 +98,8 @@ tr.tier-sep td{background:var(--bg2);font-size:10px;font-weight:600;color:var(--
 .mobile-list{display:none;padding:0 16px 40px;}
 .tier-label-mob{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:12px 0 6px;border-top:1px solid var(--border);margin-top:4px;}
 .tier-label-mob:first-child{border-top:none;}
-.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;}
+.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 .company-card:hover,.company-card.active{border-color:var(--border-accent);box-shadow:var(--glow);}
-.company-card.active{border-radius:var(--radius) var(--radius) 0 0;}
 .card-main{padding:14px 14px 12px;display:flex;align-items:flex-start;gap:10px;}
 .card-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;padding-top:2px;}
 .card-info{flex:1;min-width:0;}
@@ -271,11 +270,11 @@ tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
 .gf-still-interesting{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);margin-bottom:8px;}
 /* Mobile tier-sep for fail */
 .tier-sep-fail td{background:rgba(224,75,74,0.06)!important;color:#D05858!important;border-top:1px solid rgba(224,75,74,0.2)!important;}
-/* Mobile expand wrapper — sibling of card, not nested inside */
-.mob-exp-wrap{margin-top:-9px;margin-bottom:8px;}
-.mob-exp-wrap .exp-inner{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
+/* Mobile expand panel — sibling of card so card's overflow:hidden can't clip it */
+.mob-exp-wrap .exp-inner{border-radius:0 0 var(--radius) var(--radius);border:1px solid var(--border);border-top:none;margin-bottom:8px;}
 .mob-exp-wrap .exp-inner.open{border-color:var(--border-accent);}
 .mob-exp-wrap .exp-content{border-top:none;}
+.company-card.active{border-radius:var(--radius) var(--radius) 0 0;margin-bottom:0;}
 /* Gate pill on mobile card */
 .gate-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;border-radius:20px;font-family:var(--mono);font-weight:700;letter-spacing:.04em;margin-top:3px;}
 .gp-1{background:rgba(224,75,74,0.15);color:#E04B4A;border:1px solid rgba(224,75,74,0.3);}
@@ -1417,7 +1416,7 @@ function renderMobile(data){
     rank++;
     const card=document.createElement('div');
     card.className=`company-card ${trow(t)}`;card.id=`mc-${c.id}`;
-    card.onclick=()=>tog(c.id,c);
+    card.addEventListener('click',()=>tog(c.id,c));
     card.innerHTML=`
       <div class="card-main">
         <div class="card-rank">${rank}</div>
@@ -1437,7 +1436,6 @@ function renderMobile(data){
         <div class="card-metric"><div class="card-metric-lbl">Score</div><div class="card-metric-val">${c.gp?score.toFixed(2):'n/a'}</div></div>
       </div>`;
     ml.appendChild(card);
-    // Expand panel rendered as sibling AFTER the card so card's overflow:hidden doesn't clip it
     const expWrap=document.createElement('div');
     expWrap.className='mob-exp-wrap';
     expWrap.innerHTML=buildExpand(c.id,hasTh);
