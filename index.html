@@ -98,8 +98,9 @@ tr.tier-sep td{background:var(--bg2);font-size:10px;font-weight:600;color:var(--
 .mobile-list{display:none;padding:0 16px 40px;}
 .tier-label-mob{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:12px 0 6px;border-top:1px solid var(--border);margin-top:4px;}
 .tier-label-mob:first-child{border-top:none;}
-.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none;}
 .company-card:hover,.company-card.active{border-color:var(--border-accent);box-shadow:var(--glow);}
+.card-main,.card-metrics{cursor:pointer;}
 .card-main{padding:14px 14px 12px;display:flex;align-items:flex-start;gap:10px;}
 .card-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;padding-top:2px;}
 .card-info{flex:1;min-width:0;}
@@ -115,6 +116,8 @@ tr.tier-sep td{background:var(--bg2);font-size:10px;font-weight:600;color:var(--
 .card-metric-val{font-size:11px;font-family:var(--mono);font-weight:500;color:var(--text);}
 .card-chevron{font-size:14px;color:var(--text3);transition:transform .2s;margin-top:2px;flex-shrink:0;}
 .card-chevron.open{transform:rotate(180deg);}
+/* Full-width button that acts as the card tap target */
+.card-tap-btn{display:block;width:100%;background:none;border:none;padding:0;cursor:pointer;text-align:left;color:inherit;font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 
 /* ---- EXPAND PANEL (shared) ---- */
 .exp-inner{max-height:0;overflow:hidden;transition:max-height .4s ease;}
@@ -270,11 +273,11 @@ tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
 .gf-still-interesting{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);margin-bottom:8px;}
 /* Mobile tier-sep for fail */
 .tier-sep-fail td{background:rgba(224,75,74,0.06)!important;color:#D05858!important;border-top:1px solid rgba(224,75,74,0.2)!important;}
-/* Mobile expand panel — sibling of card so card's overflow:hidden can't clip it */
-.mob-exp-wrap .exp-inner{border-radius:0 0 var(--radius) var(--radius);border:1px solid var(--border);border-top:none;margin-bottom:8px;}
+/* Mobile expand panel wrapper — must be SIBLING of card, not child */
+.mob-exp-wrap{margin-bottom:8px;}
+.mob-exp-wrap .exp-inner{border-radius:0 0 var(--radius) var(--radius);border:1px solid var(--border);border-top:none;}
 .mob-exp-wrap .exp-inner.open{border-color:var(--border-accent);}
-.mob-exp-wrap .exp-content{border-top:none;}
-.company-card.active{border-radius:var(--radius) var(--radius) 0 0;margin-bottom:0;}
+.mob-exp-wrap .exp-content{border-top:1px solid var(--border2);}
 /* Gate pill on mobile card */
 .gate-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;border-radius:20px;font-family:var(--mono);font-weight:700;letter-spacing:.04em;margin-top:3px;}
 .gp-1{background:rgba(224,75,74,0.15);color:#E04B4A;border:1px solid rgba(224,75,74,0.3);}
@@ -1325,21 +1328,27 @@ function tog(id,c){
     const pi=document.getElementById(`i-${expanded}`);
     const pr=document.getElementById(`r-${expanded}`);
     const pc=document.getElementById(`c-${expanded}`);
+    const pch=document.getElementById(`ch-${expanded}`);
     const mc=document.getElementById(`mc-${expanded}`);
     if(pi)pi.classList.remove('open');
     if(pr)pr.classList.remove('active');
     if(pc)pc.classList.remove('open');
+    if(pch)pch.classList.remove('open');
     if(mc){mc.classList.remove('active');const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.remove('open');}
   }
   const isOpen=inner.classList.contains('open');
   inner.classList.toggle('open',!isOpen);
   const dr=document.getElementById(`r-${id}`);if(dr)dr.classList.toggle('active',!isOpen);
   const ch=document.getElementById(`c-${id}`);if(ch)ch.classList.toggle('open',!isOpen);
+  const nch=document.getElementById(`ch-${id}`);if(nch)nch.classList.toggle('open',!isOpen);
   const mc=document.getElementById(`mc-${id}`);
   if(mc){mc.classList.toggle('active',!isOpen);const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.toggle('open',!isOpen);}
   if(!isOpen&&c)loadTabContent(c);
   expanded=isOpen?null:id;
 }
+
+// Global company lookup so mobile button onclicks can find data by id
+window._C={};C.forEach(c=>window._C[c.id]=c);
 
 function applyFilters(){
   const tv=document.getElementById('fTier').value;
@@ -1414,28 +1423,33 @@ function renderMobile(data){
       ml.appendChild(lbl);lastTier=t;
     }
     rank++;
+    // Card: the visible tile the user taps. No expand panel inside —
+    // keeping it out means nothing can clip or interfere with the expansion.
     const card=document.createElement('div');
     card.className=`company-card ${trow(t)}`;card.id=`mc-${c.id}`;
-    card.addEventListener('click',()=>tog(c.id,c));
+    // Use a <button> inside as the interactive element so click always fires on mobile
     card.innerHTML=`
-      <div class="card-main">
-        <div class="card-rank">${rank}</div>
-        <div class="card-info">
-          <div class="card-name">${c.n}</div>
-          <div class="card-sect">${c.sect}${!c.gp&&GATE_INFO[c.id]?` <span class="gate-pill gp-${GATE_INFO[c.id].gate}">Gate ${GATE_INFO[c.id].gate} fail</span>`:""}</div>
+      <button class="card-tap-btn" onclick="tog('${c.id}',window._C['${c.id}'])" aria-expanded="false" aria-controls="i-${c.id}">
+        <div class="card-main">
+          <div class="card-rank">${rank}</div>
+          <div class="card-info">
+            <div class="card-name">${c.n}</div>
+            <div class="card-sect">${c.sect}${!c.gp&&GATE_INFO[c.id]?` <span class="gate-pill gp-${GATE_INFO[c.id].gate}">Gate ${GATE_INFO[c.id].gate} fail</span>`:""}</div>
+          </div>
+          <div class="card-right">
+            <div class="card-price">${fmt(c.price)}</div>
+            <div class="card-badge-wrap"><span class="badge ${tcls(t)}">${t}</span></div>
+          </div>
+          <i class="ti ti-chevron-down card-chevron" id="ch-${c.id}"></i>
         </div>
-        <div class="card-right">
-          <div class="card-price">${fmt(c.price)}</div>
-          <div class="card-badge-wrap"><span class="badge ${tcls(t)}">${t}</span></div>
+        <div class="card-metrics">
+          <div class="card-metric"><div class="card-metric-lbl">Impl. cap</div><div class="card-metric-val">${mc!==null?fmtMcap(mc):'—'}</div></div>
+          <div class="card-metric"><div class="card-metric-lbl">3M trend</div><div class="card-metric-val">${tr(c.trend)}</div></div>
+          <div class="card-metric"><div class="card-metric-lbl">Score</div><div class="card-metric-val">${c.gp?score.toFixed(2):'n/a'}</div></div>
         </div>
-        <i class="ti ti-chevron-down card-chevron"></i>
-      </div>
-      <div class="card-metrics">
-        <div class="card-metric"><div class="card-metric-lbl">Impl. cap</div><div class="card-metric-val">${mc!==null?fmtMcap(mc):'—'}</div></div>
-        <div class="card-metric"><div class="card-metric-lbl">3M trend</div><div class="card-metric-val">${tr(c.trend)}</div></div>
-        <div class="card-metric"><div class="card-metric-lbl">Score</div><div class="card-metric-val">${c.gp?score.toFixed(2):'n/a'}</div></div>
-      </div>`;
+      </button>`;
     ml.appendChild(card);
+    // Expand panel: sibling after the card so no parent clips its height
     const expWrap=document.createElement('div');
     expWrap.className='mob-exp-wrap';
     expWrap.innerHTML=buildExpand(c.id,hasTh);
