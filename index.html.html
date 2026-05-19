@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiive50 Private Market Rankings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --bg: #0A0A0F;
+  --bg2: #111118;
+  --bg3: #16161F;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.05);
+  --text: #F0EFE8;
+  --text2: #888780;
+  --text3: #4A4A52;
+  --accent: #7F77DD;
+  --teal: #1D9E75;
+  --amber: #EF9F27;
+  --red: #E24B4A;
+  --green: #639922;
+  --blue: #185FA5;
+  --font: 'IBM Plex Sans', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --radius: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+
+/* Header */
+.site-header { border-bottom: 1px solid var(--border); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; background: var(--bg2); position: sticky; top: 0; z-index: 100; }
+.site-title { font-size: 15px; font-weight: 600; letter-spacing: .02em; color: var(--text); }
+.site-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.disclaimer { font-size: 10px; color: var(--text3); background: var(--bg3); border: 1px solid var(--border); padding: 4px 10px; border-radius: var(--radius); }
+
+/* Stats */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 20px 24px 0; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.stat-n { font-size: 26px; font-weight: 600; font-family: var(--mono); color: var(--text); }
+.stat-l { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+/* Methodology banner */
+.method-bar { margin: 16px 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+.method-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); flex-shrink: 0; }
+.weight-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); white-space: nowrap; }
+
+/* Controls */
+.controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 24px 16px; align-items: center; }
+.controls label { font-size: 11px; color: var(--text2); }
+.controls select { font-size: 12px; padding: 5px 10px; border-radius: var(--radius); background: var(--bg2); border: 1px solid var(--border); color: var(--text); font-family: var(--font); cursor: pointer; }
+.controls select:focus { outline: none; border-color: var(--accent); }
+.result-count { font-size: 11px; color: var(--text3); margin-left: auto; }
+
+/* Table */
+.table-wrap { padding: 0 24px 40px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+colgroup col:nth-child(1) { width: 32px; }
+colgroup col:nth-child(2) { width: 160px; }
+colgroup col:nth-child(3) { width: 80px; }
+colgroup col:nth-child(4) { width: 90px; }
+colgroup col:nth-child(5) { width: 80px; }
+colgroup col:nth-child(6) { width: 70px; }
+colgroup col:nth-child(7) { width: 60px; }
+colgroup col:nth-child(8) { width: 28px; }
+thead th { font-size: 10px; font-weight: 500; color: var(--text3); text-align: left; padding: 8px; border-bottom: 1px solid var(--border); white-space: nowrap; letter-spacing: .04em; text-transform: uppercase; }
+tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border2); vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+tr.data-row { cursor: pointer; transition: background .1s; }
+tr.data-row:hover td, tr.data-row.active td { background: var(--bg2); }
+tr.exp-row td { padding: 0; border-bottom: 1px solid var(--border); }
+tr.tier-sep td { background: var(--bg2); font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; padding: 6px 8px; }
+
+/* Expand panel */
+.exp-inner { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+.exp-inner.open { max-height: 2400px; }
+.exp-content { padding: 20px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 18px; gap: 0; }
+.tab-btn { font-size: 12px; padding: 8px 16px; border: none; background: none; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: var(--font); transition: color .15s; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 500; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Badges */
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; font-family: var(--mono); }
+.bs { background: #1A3A0A; color: #7DC855; border: 1px solid #2D5A12; }
+.ba { background: #0A1E3A; color: #5B9BD5; border: 1px solid #122E5A; }
+.bb { background: #3A2A0A; color: #D4A445; border: 1px solid #5A3D12; }
+.bc { background: #2A2A2A; color: #888780; border: 1px solid #3A3A3A; }
+.bf { background: #3A0A0A; color: #D55B5B; border: 1px solid #5A1212; }
+
+/* Trend */
+.trend-pos { color: var(--teal); font-weight: 500; font-family: var(--mono); }
+.trend-neg { color: var(--red); font-weight: 500; font-family: var(--mono); }
+.trend-flat { color: var(--text2); font-family: var(--mono); }
+.price-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
+.score-val { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); }
+.chevron { display: inline-block; transition: transform .2s; font-size: 12px; color: var(--text3); }
+.chevron.open { transform: rotate(180deg); }
+.cname { font-weight: 500; font-size: 12px; color: var(--text); }
+.csect { font-size: 10px; color: var(--text2); }
+
+/* Overview tab */
+.gate-ok { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 12px; color: var(--teal); }
+.gate-fail-banner { background: rgba(211,85,85,0.12); border: 1px solid rgba(211,85,85,0.3); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #D55B5B; line-height: 1.6; white-space: normal; }
+.ov-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px; }
+.ov-field { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; }
+.ov-lbl { font-size: 10px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+.ov-val { font-size: 13px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+.desc-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; margin-bottom: 10px; }
+.ind-text { font-size: 12px; color: var(--text3); line-height: 1.6; font-style: italic; white-space: normal; margin-bottom: 14px; }
+.rat-box { padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); border-left: 3px solid var(--accent); }
+.rat-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.rat-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; }
+
+/* Scorecard */
+.composite-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.composite-big { font-size: 36px; font-weight: 600; font-family: var(--mono); color: var(--text); }
+.metric-row { display: grid; grid-template-columns: 160px 90px 1fr; align-items: start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border2); }
+.metric-row:last-child { border-bottom: none; }
+.metric-lbl { font-size: 12px; color: var(--text2); padding-top: 2px; }
+.metric-score-col { display: flex; align-items: center; gap: 6px; padding-top: 2px; }
+.metric-note { font-size: 11px; color: var(--text3); line-height: 1.5; white-space: normal; }
+
+/* Thesis */
+.thesis-block { padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid transparent; }
+.tb-bull { background: rgba(99,153,34,0.08); border-left-color: var(--green); }
+.tb-neut { background: rgba(24,95,165,0.08); border-left-color: var(--blue); }
+.tb-bear { background: rgba(226,75,74,0.08); border-left-color: var(--red); }
+.thesis-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.tl-bull { color: var(--green); }
+.tl-neut { color: #5B9BD5; }
+.tl-bear { color: var(--red); }
+.thesis-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; }
+
+/* News */
+.news-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.news-header-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+.news-item { padding: 12px 0; border-bottom: 1px solid var(--border2); }
+.news-item:last-child { border-bottom: none; }
+.news-link { display: block; text-decoration: none; margin-bottom: 5px; }
+.news-link:hover .news-hl { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(127,119,221,0.4); }
+.news-hl { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; white-space: normal; transition: color .15s; }
+.news-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 5px; flex-wrap: wrap; }
+.news-source { font-weight: 500; color: var(--text2); }
+.news-date { color: var(--text3); }
+.news-sum { font-size: 12px; color: var(--text2); line-height: 1.5; white-space: normal; word-wrap: break-word; }
+
+/* Score bar inline */
+.sbar { display: flex; align-items: center; gap: 6px; }
+.sbar-track { width: 50px; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.sbar-fill { height: 100%; border-radius: 2px; }
+
+/* Footer */
+.site-footer { padding: 20px 24px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); line-height: 1.6; }
+
+@media (max-width: 700px) {
+  .ov-grid { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .method-bar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="site-title">Hiive50 Private Market Rankings</div>
+    <div class="site-sub">Two-stage investment model · 50 companies · May 2026</div>
+  </div>
+  <div class="disclaimer">Not investment advice</div>
+</header>
+
+<div class="stats-row" id="statsRow"></div>
+
+<div class="method-bar">
+  <span class="method-label">Stage 2 weights:</span>
+  <span class="weight-tag">Rev growth 20%</span>
+  <span class="weight-tag">Gross margin 18%</span>
+  <span class="weight-tag">NRR 17%</span>
+  <span class="weight-tag">Valuation entry 15%</span>
+  <span class="weight-tag">Moat 15%</span>
+  <span class="weight-tag">Burn efficiency 10%</span>
+  <span class="weight-tag">Exit path 5%</span>
+</div>
+
+<div class="controls">
+  <label>Tier:</label>
+  <select id="fTier" onchange="applyFilters()">
+    <option value="">All tiers</option>
+    <option value="S">S — Strong buy</option>
+    <option value="A">A — Buy</option>
+    <option value="B">B — Watch</option>
+    <option value="C">C — Pass</option>
+    <option value="FAIL">Gate fail</option>
+  </select>
+  <label>Sector:</label>
+  <select id="fSect" onchange="applyFilters()">
+    <option value="">All sectors</option>
+    <option value="AI/ML">AI / ML</option>
+    <option value="Defense">Defense tech</option>
+    <option value="Fintech">Fintech</option>
+    <option value="Crypto">Crypto</option>
+    <option value="Robotics">Robotics</option>
+    <option value="Space">Space</option>
+    <option value="Cyber">Cybersecurity</option>
+    <option value="Other">Other</option>
+  </select>
+  <label>Sort:</label>
+  <select id="fSort" onchange="applyFilters()">
+    <option value="score">Composite score</option>
+    <option value="trend">3M trend</option>
+    <option value="price">Hiive price</option>
+    <option value="rg">Revenue growth</option>
+    <option value="ve">Valuation entry</option>
+    <option value="mo">Moat</option>
+  </select>
+  <span class="result-count" id="countLbl"></span>
+</div>
+
+<div class="table-wrap">
+<table>
+<colgroup><col><col><col><col><col><col><col><col></colgroup>
+<thead><tr>
+  <th>#</th><th>Company</th><th>Sector</th><th>Hiive price</th><th>3M trend</th><th>Score</th><th>Tier</th><th></th>
+</tr></thead>
+<tbody id="tBody"></tbody>
+</table>
+</div>
+
+<footer class="site-footer">
+  Scores: revenue growth 20% · gross margin 18% · NRR/retention 17% · valuation entry 15% · moat/defensibility 15% · burn efficiency 10% · exit path clarity 5%. Companies failing Stage 1 binary gates (regulatory viability, customer concentration, burn runway, revenue reality, exit path) are eliminated before scoring. Data sources: Hiive50 platform (May 2026), Sacra, Morningstar/PitchBook framework, Augment Power 20 Q1 2026, Setter 30 Q1 2026, public funding announcements. All scores are analyst estimates based on available public information — private company financials are not fully disclosed. Not investment advice. For informational and educational purposes only.
+</footer>
+
+<script>
+const C=[
+{id:"databricks",n:"Databricks",sect:"AI/ML",price:218.91,trend:11.9,bid:321,ask:null,gp:true,gfr:"",
+sc:{rg:9.5,gm:9.0,nr:9.5,ve:8.5,mo:9.0,be:9.5,ep:8.5},
+desc:"Databricks is the world's leading unified data and AI platform, helping enterprises store, process, and build AI applications on top of their data at scale. It combines a data lakehouse architecture, machine learning tools, and a rapidly expanding suite of AI products used by over 20,000 organizations globally including Apple, Comcast, and Shell. Its platform sits at the intersection of every major enterprise technology trend: cloud migration, real-time analytics, and generative AI deployment.",
+ind:"Enterprise AI and data infrastructure — competes with Snowflake, Google BigQuery, and AWS Redshift on data while expanding aggressively into AI model training, serving, and evaluation.",
+rat:"Databricks ranks #1 because it is the only profitable AI IPO candidate in the Hiive50, combining 80%+ gross margins, 140% NRR, and positive free cash flow. Its 65% revenue growth at $5.4B ARR places it in a category of one for institutional quality. The H2 2026 IPO filing creates a near-term liquidity event removing the open-ended hold risk that afflicts every other name in this index.",
+bull:"Databricks IPOs in H2 2026 at a premium to its $134B valuation. Its 140% NRR means the installed base compounds automatically. As enterprises deepen AI workloads, Databricks becomes unavoidable infrastructure — the AWS of enterprise AI.",
+neut:"The IPO occurs on schedule but prices at or near the $134B valuation, delivering modest returns. Revenue growth decelerates from 65% to 40% as the market matures and Snowflake closes the competitive gap.",
+bear:"Databricks delays its IPO into 2027 as public market appetite cools. Snowflake, Google, and Microsoft accelerate competing platforms with bundled pricing. NRR compresses below 120% as customers consolidate vendors.",
+news:[
+{h:"Databricks raises $5B at $134B valuation — crosses $5.4B ARR with 65% growth",s:"Reuters / US News",d:"Feb 9, 2026",u:"https://money.usnews.com/investing/news/articles/2026-02-09/databricks-valued-at-134-billion-in-latest-fundraise-cnbc-reports"},
+{h:"Databricks secures $1.8B in debt financing ahead of 2026 IPO",s:"CNBC",d:"Jan 23, 2026",u:"https://www.cnbc.com/2026/01/23/databricks-obtains-1point8-billion-in-additional-debt-ahead-of-ipo.html"},
+{h:"Databricks IPO 2026: H2 timeline, $134B valuation and investor guide",s:"Allied Venture Partners",d:"2026",u:"https://www.allied.vc/articles/databricks-ipo-expectations-key-dates-valuation-risks"},
+{h:"Databricks: 0.38x PEG vs Snowflake 0.69x — cheapest growth-adjusted AI multiple",s:"Tech Insider",d:"Feb 2026",u:"https://tech-insider.org/databricks-134-billion-ipo-enterprise-software-2026/"},
+{h:"CEO Ali Ghodsi: Databricks will go public 'when the time is right'",s:"TechBuzz",d:"Feb 9, 2026",u:"https://www.techbuzz.ai/articles/databricks-closes-5b-round-at-134b-valuation-eyes-ipo"}
+]},
+{id:"anthropic",n:"Anthropic",sect:"AI/ML",price:1450.01,trend:379.5,bid:2500,ask:1380,gp:true,gfr:"",
+sc:{rg:10,gm:6.5,nr:9.5,ve:5.5,mo:9.5,be:5.0,ep:9.0},
+desc:"Anthropic builds frontier AI models including the Claude family, deployed across enterprise API contracts, developer tools, and the Claude Code coding agent. It is the fastest-growing enterprise software company in history, reaching $30B in annualized revenue in under four years. Eight of the Fortune 10 are now Claude customers, and over 1,000 companies spend more than $1M annually on the platform.",
+ind:"Foundation model AI — competes directly with OpenAI, Google DeepMind, and Meta AI for enterprise API contracts. Focused on safety-oriented enterprise AI with a strong differentiator in agentic coding through Claude Code.",
+rat:"Anthropic's perfect 10 revenue growth score reflects the most extraordinary compounding in enterprise software history — from $1B to $30B ARR in 15 months. Its estimated 140% NRR and eight Fortune 10 customers anchor institutional quality. The main constraint is entry price: at $380B valuation and 27x ARR, investors are paying for near-flawless execution through 2028.",
+bull:"Anthropic IPOs in late 2026 at $900B+ as its margin structure reaches 60% gross margins. Claude Code's 54% market share in AI coding becomes a durable enterprise workflow moat. The $70B revenue projection for 2028 proves out.",
+neut:"Anthropic grows to $50-60B ARR but margins only reach 45% — below target — compressing the IPO multiple. The company lists at or near its $380B valuation, delivering limited returns to secondary buyers near current prices.",
+bear:"OpenAI's distribution advantage and Google's infrastructure integration erode Anthropic's enterprise share. Inference cost commoditization compresses margins before profitability, delaying the IPO to 2028.",
+news:[
+{h:"Anthropic hits $30B ARR in April 2026 — surpassing OpenAI",s:"Remio AI",d:"Apr 2026",u:"https://www.remio.ai/post/anthropic-revenue-just-passed-openai-the-growth-rate-is-the-real-story"},
+{h:"Anthropic raises $30B Series G at $380B valuation — 1,000+ customers at $1M+ annually",s:"Sacra",d:"Feb 2026",u:"https://sacra.com/c/anthropic/"},
+{h:"Claude Code reaches $2.5B ARR — business subscriptions quadruple since January 2026",s:"The Information",d:"Feb 2026",u:"https://www.theinformation.com/articles/anthropic-lowers-profit-margin-projection-revenue-skyrockets"},
+{h:"Anthropic gross margin improving — targeting 77% by 2028",s:"Morningstar",d:"Jan 2026",u:"https://www.morningstar.com/markets/which-3-giant-ai-ipos-should-you-buy"},
+{h:"Anthropic IPO preparations underway — Goldman Sachs, JPMorgan, Morgan Stanley engaged",s:"AI IPO Tracker",d:"May 2026",u:"https://aifundingtracker.com/ai-ipo-tracker/"}
+]},
+{id:"shield-ai",n:"Shield AI",sect:"Defense",price:151.89,trend:80.5,bid:170,ask:88,gp:true,gfr:"",
+sc:{rg:9.0,gm:7.5,nr:8.0,ve:9.0,mo:9.0,be:7.5,ep:8.0},
+desc:"Shield AI builds Hivemind, an autonomous AI pilot software platform that enables military aircraft, drones, ships, and satellites to operate without GPS or communications in contested environments. Its V-BAT surveillance drone is actively deployed by the US military and allied nations. The company's software-first model creates high gross margins and switching costs while serving the defense market.",
+ind:"Defense AI and autonomous systems — competes with traditional defense primes like Lockheed Martin and Raytheon while also competing with defense tech peers Anduril and Saronic.",
+rat:"Shield AI ranks #3 because it combines 80%+ revenue growth with a defensible government software moat and the most attractive valuation entry multiple in the S-tier at 23x forward revenue. Its selection as autonomous software provider for the USAF Collaborative Combat Aircraft program creates a multi-decade embedded contract nearly impossible to displace.",
+bull:"Hivemind becomes the standard autonomy layer for US and allied military aircraft globally, with the CCA program scaling to thousands of autonomous wingmen by 2030. A defense-sector IPO wave pulls Shield AI public at a significant premium.",
+neut:"Revenue hits $540M in 2026 but growth decelerates as program ramp timelines extend. Company reaches $1B by 2028 with IPO delayed to 2029.",
+bear:"Budget sequestration or a shift in autonomous weapons policy delays or scales back the CCA program. A competing autonomy platform from a traditional prime wins a key program of record.",
+news:[
+{h:"Shield AI raises $2B at $12.7B valuation — projects $540M in 2026 revenue with 80%+ growth",s:"Fortune",d:"Mar 26, 2026",u:"https://fortune.com/2026/03/26/shield-ai-revenue-series-g-funding-12-billion-valuation/"},
+{h:"Shield AI Hivemind selected for USAF Collaborative Combat Aircraft program",s:"Forge Global",d:"Feb 2026",u:"https://forgeglobal.com/shield-ai_stock/"},
+{h:"Shield AI stock analysis: $12.7B valuation — path to IPO",s:"TSG Invest",d:"Apr 2026",u:"https://tsginvest.com/shield-ai/"},
+{h:"Shield AI +80.5% three-month secondary price trend on Hiive",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/shield-ai-stock"},
+{h:"Shield AI CEO targets $1B revenue by fiscal year ending March 2028",s:"TSG Invest",d:"Apr 2026",u:"https://tsginvest.com/shield-ai/"}
+]},
+{id:"spacex",n:"SpaceX",sect:"Space",price:761.99,trend:12.8,bid:610,ask:830,gp:true,gfr:"",
+sc:{rg:8.5,gm:8.0,nr:8.5,ve:7.0,mo:10,be:9.0,ep:9.5},
+desc:"SpaceX operates the world's only fully reusable heavy-lift rockets and the Starlink satellite internet constellation serving over four million subscribers globally. It holds a de facto monopoly on commercial launch services while building toward Mars colonization with Starship. Starlink has become independently profitable, funding the entire launch business. The June 2026 IPO roadshow targets a $1.75 trillion valuation.",
+ind:"Space infrastructure and satellite internet — uncontested in reusable heavy lift, competing with Amazon Kuiper and OneWeb in satellite broadband.",
+rat:"SpaceX earns a perfect 10 moat score — the only company in the Hiive50 with a genuine infrastructure monopoly. Starlink generates high-margin recurring subscription revenue now cash-flow positive. The confirmed June 2026 IPO roadshow gives this the clearest near-term liquidity event of any S-tier name.",
+bull:"SpaceX IPO prices at or above $1.75T in June 2026. Starlink reaches 10 million subscribers by 2027. Starship enables commercial Moon missions, opening entirely new revenue categories.",
+neut:"IPO prices below target at $1.2-1.4T due to public market appetite constraints. Amazon Kuiper launches competitively. Secondary buyers at $762/share see a modest gain.",
+bear:"IPO delayed as markets turn volatile. Starship development timelines extend. Amazon Kuiper disrupts Starlink subscriber growth faster than anticipated.",
+news:[
+{h:"SpaceX files confidential S-1 targeting $1.75T valuation — largest IPO in history",s:"AI Funding Tracker",d:"Apr 2026",u:"https://aifundingtracker.com/top-50-ai-startups/"},
+{h:"SpaceX IPO probability at 88% on Kalshi — second-highest among major private companies",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Starlink profitable — funding entire SpaceX launch and Starship program",s:"SpaceX",d:"2025",u:"https://www.spacex.com"},
+{h:"SpaceX acquires xAI — combined entity targets $1.75T IPO valuation",s:"Augment Market",d:"Q1 2026",u:"https://augment.market/pulse/power-20-q1-openai--22-anthropic-59"},
+{h:"SpaceX secondary at $761.99 — bid-ask spread signals institutional activity",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/spacex-stock"}
+]},
+{id:"kalshi",n:"Kalshi",sect:"Fintech",price:580.80,trend:61.5,bid:600,ask:null,gp:true,gfr:"",
+sc:{rg:9.5,gm:8.5,nr:7.5,ve:8.5,mo:8.5,be:7.5,ep:7.5},
+desc:"Kalshi is the first CFTC-regulated event contract exchange in the US, allowing users to trade binary contracts on real-world outcomes including elections, sports, economics, and weather. As of May 2026 it has grown to over $1.5B in annualized fee revenue on $178B in annualized trading volume — a 994% year-over-year revenue increase in 2025.",
+ind:"Regulated prediction markets and financial exchange — pioneer in a category with no direct US regulatory equivalent, competing indirectly with sports betting platforms and derivatives exchanges.",
+rat:"Kalshi scores 9.5 on revenue growth because its 994% YoY growth to $263M in 2025, now running at $1.5B annualized, is unprecedented in regulated financial services. Its own CFTC-approved clearinghouse creates near-zero marginal costs at scale. At $22B on $1.5B revenue, it is the cheapest fintech entry at 15x.",
+bull:"Kalshi becomes the global standard for pricing event risk. Institutional volume growing 800%. Reaches $10B in revenue by 2029. Own clearinghouse makes the economics impossible for competitors to replicate.",
+neut:"Growth moderates from 994% to 100-150% as election cycle tailwind fades. Revenue reaches $3-4B by 2028.",
+bear:"New CFTC administration reinterprets event contract regulation. Sports betting platforms lobby for restrictions. Election and NFL concentration creates cyclical revenue risk.",
+news:[
+{h:"Kalshi raises $1B Series F at $22B valuation led by Coatue",s:"Sacra",d:"May 2026",u:"https://sacra.com/c/kalshi/"},
+{h:"Kalshi annualized revenue exceeds $1.5B — trading volume hits $178B annualized",s:"Sacra",d:"May 2026",u:"https://sacra.com/c/kalshi/"},
+{h:"Kalshi launches own CFTC-approved clearinghouse Kalshi Klear",s:"Kalshi",d:"Mar 2026",u:"https://kalshi.com"},
+{h:"Kalshi IPO probability at 68% — third-highest among tracked private companies",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Kalshi $300M raise at $5B valuation — trading volume nears $50B annualized",s:"Pre-IPO Stocks",d:"2025",u:"https://rss.buzzsprout.com/2079052.rss"}
+]},
+{id:"cerebras",n:"Cerebras Systems",sect:"AI/ML",price:224.56,trend:100.4,bid:231,ask:197.5,gp:true,gfr:"",
+sc:{rg:8.5,gm:7.0,nr:7.5,ve:8.0,mo:8.0,be:7.0,ep:9.5},
+desc:"Cerebras builds the Wafer-Scale Engine — the world's largest AI chip at 57x the size of Nvidia's H100 — delivering dramatically faster inference for large language models. It filed for its Nasdaq IPO in May 2026 under ticker CBRS with a 20x oversubscribed order book at the $48.8B fully diluted valuation — the largest global IPO of 2026.",
+ind:"AI semiconductors and cloud compute — competes with Nvidia on inference workloads, and with cloud AI chips from Google TPU and Amazon Trainium.",
+rat:"Cerebras earns a 9.5 exit path score because its IPO is the most imminent and certain event in the Hiive50 — priced at $150-160/share with a 20x oversubscribed order book. The +100.4% three-month trend is the strongest in the index and directly reflects IPO certainty being priced in.",
+bull:"Cerebras IPOs at or above $48.8B. WSE-4 cements leadership in inference-at-scale. OpenAI and AWS anchor relationships generate $2B+ in annual revenue by 2027.",
+neut:"IPO prices at target but trades flat as investors question near-term GAAP profitability. Revenue grows to $600-800M by 2027 with customer concentration limiting multiple expansion.",
+bear:"Nvidia's Blackwell architecture closes the performance gap within 18 months. Customer concentration in OpenAI and AWS makes revenue volatile.",
+news:[
+{h:"Cerebras prices IPO at $150-160/share — 20x oversubscribed, largest global IPO of 2026",s:"AI IPO Tracker",d:"May 2026",u:"https://aifundingtracker.com/ai-ipo-tracker/"},
+{h:"Cerebras +100.4% three-month secondary price trend — strongest in entire Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/cerebras-systems-stock"},
+{h:"Cerebras CFIUS national security review cleared after G42 restructure",s:"AI IPO Tracker",d:"Oct 2025",u:"https://aifundingtracker.com/ai-ipo-tracker/"},
+{h:"Cerebras IPO probability at 95% — highest among all tracked companies on Kalshi",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Cerebras WSE-3: 4 trillion transistors, 57x larger than Nvidia H100",s:"AI IPO Tracker",d:"May 2026",u:"https://aifundingtracker.com/ai-ipo-tracker/"}
+]},
+{id:"stripe",n:"Stripe",sect:"Fintech",price:71.12,trend:11.4,bid:100,ask:66,gp:true,gfr:"",
+sc:{rg:7.0,gm:7.0,nr:8.0,ve:6.0,mo:9.5,be:8.5,ep:6.5},
+desc:"Stripe is the global payments infrastructure for the internet, processing hundreds of billions of dollars annually for millions of businesses from startups to Amazon and Google. It has expanded into banking, cards, and AI-native payment workflows. Its $159B tender offer reflects strong insider confidence.",
+ind:"Payments infrastructure and financial technology — competes with Adyen, Braintree, and legacy processors while positioning as full-stack financial infrastructure.",
+rat:"Stripe's moat score of 9.5 is the joint-highest in the fintech tier because its payment rails are embedded in millions of businesses' core revenue infrastructure — switching away from Stripe is a multi-quarter engineering project. The main drag on rank is entry price against an estimated 25-30% growth rate.",
+bull:"Stripe captures the AI payments infrastructure layer as every AI agent needs to transact. IPOs at $200B+. International expansion adds geographic growth.",
+neut:"Continues growing at 25-30%. The $159B valuation proves fairly priced — IPO in 2027-2028 delivers modest returns.",
+bear:"Management indefinitely defers the IPO. Adyen wins major European enterprise clients. A recession reduces payment volumes.",
+news:[
+{h:"Stripe initiates $159B tender offer",s:"Pre-IPO Stocks",d:"2026",u:"https://rss.buzzsprout.com/2079052.rss"},
+{h:"Stripe Sessions 2026: positioning as economic infrastructure for AI",s:"Stripe",d:"2026",u:"https://stripe.com/sessions"},
+{h:"Stripe IPO probability at 9% — management strongly prefers private status",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Stripe NRR estimated at 120%+ driven by merchant volume expansion",s:"SaaStr",d:"2025",u:"https://www.saastr.com"},
+{h:"Stripe +11.4% three-month secondary — $100 bid vs $66 ask",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/stripe-stock"}
+]},
+{id:"kraken",n:"Kraken",sect:"Crypto",price:34.74,trend:0.6,bid:36,ask:31,gp:true,gfr:"",
+sc:{rg:7.5,gm:7.5,nr:7.0,ve:7.5,mo:7.5,be:8.0,ep:7.5},
+desc:"Kraken is one of the world's largest and most trusted cryptocurrency exchanges, offering spot trading, futures, staking, and institutional custody across 200+ digital assets. In 2026 it became the first cryptocurrency firm to gain direct access to the US Federal Reserve's Fedwire settlement system — a structural competitive moat over every other crypto exchange.",
+ind:"Cryptocurrency exchange and financial infrastructure — competes with Coinbase as a public company, Binance globally, and traditional brokerages expanding into crypto.",
+rat:"Kraken's Fedwire access is the single most important structural moat event of any crypto company in 2026 — it enables direct USD settlement through the Federal Reserve that no other crypto exchange can offer. Combined with a 68% IPO probability on Kalshi and self-sustaining exchange economics, it presents a compelling entry.",
+bull:"Kraken IPOs in 2026-2027 on the back of Fedwire access. Institutional crypto adoption drives volume to new highs.",
+neut:"Growth steady at 30-40% annually. IPO delayed to 2028.",
+bear:"A crypto market downturn reduces trading volume 60-70%. Coinbase's first-mover advantage limits Kraken's institutional share gains.",
+news:[
+{h:"Kraken becomes first crypto firm with Federal Reserve Fedwire access",s:"Pre-IPO Stocks",d:"2026",u:"https://rss.buzzsprout.com/2079052.rss"},
+{h:"Kraken IPO probability at 68% on Kalshi",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Bipartisan crypto legislation provides clearest US regulatory framework in a decade",s:"CFTC",d:"2026",u:"https://www.cftc.gov"},
+{h:"Kraken secondary at $34.74 — 36 bid / 31 ask",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/kraken-stock"},
+{h:"Kraken: history, leadership, and path to IPO",s:"Access IPOs",d:"2026",u:"https://accessipos.com"}
+]},
+{id:"scale-ai",n:"Scale AI",sect:"AI/ML",price:15.75,trend:127.9,bid:15.05,ask:9,gp:true,gfr:"",
+sc:{rg:8.0,gm:6.5,nr:7.0,ve:8.5,mo:6.5,be:7.0,ep:6.5},
+desc:"Scale AI provides data labeling, RLHF, and AI evaluation infrastructure that the world's leading AI labs use to train and align their models. It has pivoted toward full-stack AI evaluation and government AI deployment infrastructure, with CEO Alexandr Wang serving on US AI advisory boards and positioning Scale as the trusted neutral evaluator for AI safety in regulated contexts.",
+ind:"AI data infrastructure and evaluation — pivoting from third-party data labeling to AI evaluation and government AI deployment infrastructure for national security applications.",
+rat:"Scale AI's extraordinary +127.9% three-month price trend is the strongest non-IPO movement in the Hiive50, reflecting its pivot toward government AI contracts. Its valuation entry score of 8.5 reflects a price that has not fully caught up to its strategic importance as US national AI infrastructure.",
+bull:"Scale becomes the de facto standard for AI evaluation required by regulation. Government contracts compound to $2B+ annually. IPOs at a premium as the only pure-play AI infrastructure company with both commercial and government revenue.",
+neut:"Labeling business matures as government contracts partially offset headwinds. Revenue grows at 30-40% through 2028.",
+bear:"Frontier models increasingly label their own outputs. Defense budget uncertainty creates government revenue risk.",
+news:[
+{h:"Scale AI +127.9% three-month secondary — strongest non-IPO appreciation in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/scale-ai-stock"},
+{h:"Scale AI government AI division expanding across DoD and intelligence community",s:"Scale AI",d:"2025-2026",u:"https://scale.com"},
+{h:"Scale AI Donovan platform: AI for defense and national security",s:"Scale AI",d:"2024-2025",u:"https://scale.com/donovan"},
+{h:"Scale AI CEO Alexandr Wang joins US AI safety and national security advisory boards",s:"Scale AI",d:"2026",u:"https://scale.com"},
+{h:"Scale AI raises at multi-billion valuation — investors bet on AI data infrastructure",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"}
+]},
+{id:"lightmatter",n:"Lightmatter",sect:"AI/ML",price:117.79,trend:104.8,bid:120,ask:110,gp:true,gfr:"",
+sc:{rg:7.5,gm:7.5,nr:7.0,ve:7.5,mo:8.5,be:6.5,ep:6.0},
+desc:"Lightmatter builds photonic interconnects — chips that use light instead of electrons to move data between AI processors — dramatically reducing latency and energy consumption in AI data centers. Its Passage interconnect is being evaluated by multiple hyperscalers who are hitting the physical limits of copper interconnects as AI cluster sizes grow. Lightmatter is the only company operating at production scale in this category.",
+ind:"Photonic AI infrastructure — creating a new category of semiconductor interconnect with no direct competitors at commercial scale.",
+rat:"Lightmatter's 8.5 moat score reflects a technology position that is 5-7 years ahead of any competitor — photonic interconnects are nearly impossible for Nvidia, Intel, or anyone else to replicate quickly at production scale. The +104.8% three-month trend is the second-strongest in the Hiive50 after Cerebras.",
+bull:"Photonic interconnects become mandatory for next-generation AI data centers. Lightmatter becomes a critical hyperscaler supplier generating $1B+ in revenue by 2028. Acquisition by Nvidia, Intel, or TSMC.",
+neut:"Adoption slower due to 2-3 year hardware qualification cycles. Revenue reaches $200-400M by 2028.",
+bear:"Nvidia acquires a competing photonic startup and bundles technology into existing platforms. Hyperscaler qualification pushes revenues into the 2030s.",
+news:[
+{h:"Lightmatter +104.8% three-month secondary — second-highest in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/lightmatter-stock"},
+{h:"Lightmatter raises $400M+ — photonic AI interconnect enters hyperscaler evaluation",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Lightmatter Passage: photonic interconnect technology overview",s:"Lightmatter",d:"2025-2026",u:"https://lightmatter.co"},
+{h:"AI data center interconnect bottleneck: why photonics matters",s:"IEEE Spectrum",d:"2025",u:"https://spectrum.ieee.org"},
+{h:"Lightmatter valuation and funding history",s:"PitchBook",d:"2026",u:"https://pitchbook.com"}
+]},
+{id:"crusoe",n:"Crusoe",sect:"AI/ML",price:197.64,trend:74.9,bid:190,ask:null,gp:true,gfr:"",
+sc:{rg:8.0,gm:6.0,nr:7.0,ve:7.5,mo:6.5,be:6.5,ep:6.5},
+desc:"Crusoe builds sustainable AI cloud infrastructure, initially using stranded natural gas from oil fields to power GPU clusters, now expanding to purpose-built AI data centers. The AMD partnership announced in 2026 uses credit facilities to accelerate chip deployment, positioning Crusoe as a serious alternative to CoreWeave for companies seeking non-hyperscaler AI compute.",
+ind:"AI cloud infrastructure and sustainable compute — competes with CoreWeave which is now public, Lambda, and AI-specific cloud offerings from AWS, Google, and Azure.",
+rat:"Crusoe's +74.9% three-month trend is the fifth-strongest in the Hiive50, reflecting strong conviction in the AI infrastructure buildout thesis. The sustainable compute angle differentiates it from pure GPU rental peers. The main consideration is CoreWeave's public listing creates a liquid alternative.",
+bull:"Crusoe's purpose-built AI data centers with sustainability credentials become the preferred compute for enterprises with ESG mandates. Revenue scales to $2B+ by 2028.",
+neut:"Grows at 50-70% annually but CoreWeave's public capital compresses the premium. IPO or acquisition in 2027-2028.",
+bear:"GPU rental rates decline 50-70% as supply catches up. Crusoe's cost structure is less flexible than hyperscaler competitors.",
+news:[
+{h:"Crusoe raises $1.38B Series E at $10B valuation for AI data center expansion",s:"Crescendo AI",d:"2025",u:"https://www.crescendo.ai/news/latest-vc-investment-deals-in-ai-startups"},
+{h:"Crusoe +74.9% three-month secondary price trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/crusoe-stock"},
+{h:"AMD and Crusoe partner to accelerate GPU chip deployment via credit facilities",s:"Pre-IPO Stocks",d:"2026",u:"https://rss.buzzsprout.com/2079052.rss"},
+{h:"Crusoe sustainable AI infrastructure overview",s:"Crusoe",d:"2024-2025",u:"https://www.crusoe.ai"},
+{h:"CoreWeave IPO: context for AI infrastructure valuation",s:"CoreWeave",d:"Mar 2025",u:"https://www.coreweave.com"}
+]},
+{id:"huntress",n:"Huntress",sect:"Cyber",price:13.93,trend:-8.2,bid:13.8,ask:17,gp:true,gfr:"",
+sc:{rg:8.0,gm:7.5,nr:8.0,ve:8.5,mo:7.5,be:7.5,ep:7.0},
+desc:"Huntress provides managed detection and response cybersecurity engineered for small and medium-sized businesses that lack dedicated 24/7 security teams. Its platform is distributed through managed service providers protecting tens of thousands of SMB clients. The SMB cybersecurity market is enormous and largely unaddressed — roughly 30 million small businesses in the US with no professional cybersecurity protection despite being the primary ransomware target.",
+ind:"SMB cybersecurity and managed detection — uniquely positioned in the underserved SMB market through an MSP distribution channel.",
+rat:"Huntress is one of the most overlooked names in the Hiive50. Its 60% YoY revenue growth toward $185-190M, combined with an 8.5 valuation entry score and secondary price weakness of -8.2% creating a relative discount, makes it among the best risk-adjusted entries in the index.",
+bull:"SMB cybersecurity becomes mandatory via cyber insurance MDR requirements. Huntress scales to $500M+ ARR by 2028 and IPOs as the definitive SMB cybersecurity platform.",
+neut:"Revenue reaches $300-400M by 2028. IPO in 2027-2028 at a reasonable multiple.",
+bear:"CrowdStrike or SentinelOne launches a competitive SMB product through the MSP channel. Cyber insurance pricing pressure reduces SMB security budgets.",
+news:[
+{h:"Huntress on track for $185-190M revenue with 60% YoY growth — CEO confirms at NYSE",s:"Cryptorank",d:"Jan 2026",u:"https://cryptorank.io/news/feed/0bb51-crunchbase-predicts-15-companies-ipo-ai-fintech-defense-forecast-2026"},
+{h:"Huntress -8.2% three-month secondary — potential entry discount vs strong fundamentals",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/huntress-stock"},
+{h:"SMB cybersecurity: mandatory MDR requirements driving market growth",s:"Huntress",d:"2025-2026",u:"https://huntress.com"},
+{h:"Huntress cybersecurity platform for SMBs: product overview",s:"Huntress",d:"2026",u:"https://huntress.com"},
+{h:"Huntress raises growth funding for MSP channel expansion",s:"TechCrunch",d:"2024-2025",u:"https://techcrunch.com"}
+]},
+{id:"dragos",n:"Dragos",sect:"Cyber",price:24.93,trend:21.6,bid:null,ask:20,gp:true,gfr:"",
+sc:{rg:7.0,gm:7.5,nr:7.5,ve:8.0,mo:8.0,be:7.0,ep:7.0},
+desc:"Dragos is the world's leading industrial cybersecurity company, protecting operational technology environments including power grids, water utilities, oil refineries, and manufacturing facilities from cyberattacks. OT security requires fundamentally different expertise than IT security — protecting a Siemens industrial control system requires knowledge of physical process engineering and legacy protocols that no IT security vendor possesses at Dragos's scale.",
+ind:"Industrial cybersecurity for operational technology — the dominant player in a category that neither CrowdStrike, Palo Alto Networks, nor any IT-focused vendor can easily replicate.",
+rat:"Dragos has a moat score of 8.0 because OT cybersecurity is a genuine expertise category with extremely high switching costs. The +21.6% three-month trend and an ask price of $20 against a $24.93 market price indicates motivated sellers potentially offering a below-market entry.",
+bull:"Critical infrastructure cybersecurity mandates drive mandatory OT security spending across every utility and industrial operator. Dragos IPOs in 2027 at significant premium.",
+neut:"Revenue grows at 30-40% driven by regulatory tailwinds. Acquisition by Palo Alto, CrowdStrike, or IBM is the most likely exit.",
+bear:"Palo Alto builds or buys an OT security product using existing enterprise relationships. Utility budget constraints limit security spending.",
+news:[
+{h:"Dragos +21.6% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/dragos-stock"},
+{h:"CISA mandates critical infrastructure OT cybersecurity improvements",s:"CISA",d:"2024-2026",u:"https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience"},
+{h:"Dragos raises $200M Series D at $1.7B valuation",s:"Dragos",d:"2022-2023",u:"https://www.dragos.com/news/"},
+{h:"Industrial control system cyberattacks increasing — Dragos threat intelligence report",s:"Dragos",d:"2025",u:"https://www.dragos.com/resources/"},
+{h:"Dragos OT security platform: protecting industrial environments",s:"Dragos",d:"2026",u:"https://www.dragos.com"}
+]},
+{id:"cohere",n:"Cohere",sect:"AI/ML",price:226.03,trend:14.2,bid:230,ask:230,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:7.5,mo:5.5,be:6.0,ep:7.0},
+desc:"Cohere builds enterprise AI language models designed for deployment within corporate firewalls and private cloud environments, offering privacy-first alternatives to OpenAI and Anthropic for regulated industries. Its on-premise and VPC deployment capability is its primary differentiator — banks and healthcare systems that cannot send data to external APIs can run Cohere models inside their own infrastructure.",
+ind:"Enterprise AI models with privacy-first deployment — competes with Anthropic and OpenAI for enterprise API contracts, differentiated by on-premise deployment for regulated industries.",
+rat:"Cohere's 7.5 entry score reflects a lower absolute valuation than frontier peers with a credible H2 2026 IPO. However, its moat score of 5.5 reflects the core challenge: every capability it offers, Anthropic and OpenAI offer better with superior distribution and larger R&D budgets.",
+bull:"On-premise AI deployment becomes a hard regulatory requirement globally. Cohere captures the compliance-first segment. The H2 2026 IPO provides near-term liquidity.",
+neut:"Cohere IPOs at a modest multiple providing liquidity but limited upside. Revenue grows 30-40% but competitive gap is difficult to close.",
+bear:"Anthropic and OpenAI launch comprehensive on-premise deployment, eliminating Cohere's key differentiator. Enterprise AI consolidates around 2-3 providers.",
+news:[
+{h:"Cohere targets H2 2026 IPO — one of 12 AI companies representing $3T in combined value",s:"AI IPO Tracker",d:"May 2026",u:"https://aifundingtracker.com/ai-ipo-tracker/"},
+{h:"Cohere raises $500M+ at $5B+ valuation on enterprise privacy thesis",s:"TechCrunch",d:"2024-2025",u:"https://techcrunch.com"},
+{h:"Cohere +14.2% three-month secondary with tight 230/230 bid-ask",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/cohere-stock"},
+{h:"Cohere Command R: enterprise AI model for on-premise deployment",s:"Cohere",d:"2025-2026",u:"https://cohere.com"},
+{h:"Enterprise AI privacy: why regulated industries can't use cloud AI",s:"Cohere",d:"2025",u:"https://cohere.com/blog"}
+]},
+{id:"perplexity",n:"Perplexity AI",sect:"AI/ML",price:63.41,trend:15.5,bid:80,ask:60,gp:true,gfr:"",
+sc:{rg:9.0,gm:7.0,nr:8.0,ve:7.5,mo:7.0,be:6.5,ep:7.0},
+desc:"Perplexity AI is an AI-powered answer engine that provides sourced, real-time responses combining large language model reasoning with live web search. It has grown 30x in revenue since early 2024 and launched a desktop AI agent in April 2026 with usage-based pricing. Its emphasis on cited, verifiable sources resonates with professional users.",
+ind:"AI search and research intelligence — competes directly with Google AI Overviews, Microsoft Bing Copilot, and ChatGPT's web browsing mode.",
+rat:"Perplexity's 9.0 revenue growth score reflects 30x growth since early 2024. Its $21B valuation is reasonable relative to the growth rate. The moat score of 7.0 reflects the main risk: Google and OpenAI are better-capitalized direct competitors rapidly closing the product gap.",
+bull:"Perplexity's desktop AI agent becomes the default research workflow for knowledge workers. Usage-based pricing scales automatically. IPOs at $40-50B in 2027-2028.",
+neut:"Google AI Overviews and ChatGPT limit market share expansion. Revenue reaches $500M-1B by 2027 supporting a moderate IPO.",
+bear:"Google launches a superior cited-AI search product. Usage-based pricing proves more volatile than subscription.",
+news:[
+{h:"Perplexity raises at $21.2B valuation after 30x revenue growth since 2024",s:"Augment Market",d:"Q1 2026",u:"https://augment.market/pulse/power-20-q1-openai--22-anthropic-59"},
+{h:"Perplexity launches desktop AI agent with usage-based pricing",s:"Perplexity",d:"Apr 2026",u:"https://www.perplexity.ai"},
+{h:"Perplexity -5% secondary price in Q1 2026 as buyers rotate",s:"Augment Power 20",d:"Q1 2026",u:"https://augment.market/pulse/power-20-q1-openai--22-anthropic-59"},
+{h:"Perplexity revenue and funding history",s:"Sacra",d:"2025",u:"https://sacra.com"},
+{h:"Perplexity AI product hub: how the answer engine works",s:"Perplexity",d:"2025-2026",u:"https://www.perplexity.ai/hub"}
+]},
+{id:"groq",n:"Groq",sect:"AI/ML",price:34.28,trend:-2.2,bid:null,ask:null,gp:true,gfr:"",
+sc:{rg:7.5,gm:7.0,nr:7.0,ve:7.5,mo:7.5,be:6.0,ep:6.0},
+desc:"Groq builds the Language Processing Unit, a purpose-built AI inference chip delivering dramatically faster token generation than GPU-based systems. Its GroqCloud inference service is the fastest publicly available LLM serving platform, enabling response speeds of hundreds of tokens per second versus the tens typical of GPU services.",
+ind:"AI inference chips and cloud — competes with Nvidia on inference workloads and with Together AI, Fireworks AI, and cloud providers on inference-as-a-service.",
+rat:"Groq's moat score of 7.5 reflects genuine first-mover advantage in LPU architecture — inference speeds demonstrably faster than Nvidia GPUs for many workloads. The main concern is 0 live orders on Hiive creating real illiquidity risk, and Nvidia's aggressive Blackwell response to the inference market.",
+bull:"LPU proves decisively superior for real-time inference. Major enterprises standardize on Groq. Acquisition by a hyperscaler at significant premium.",
+neut:"Grows steadily but Nvidia's inference-optimized products close the gap. Profitable niche without dominant platform status.",
+bear:"Nvidia releases an inference-specific architecture matching Groq's latency at lower cost. Inference market commoditizes faster than Groq can build a sticky customer base.",
+news:[
+{h:"Groq 0 live orders on Hiive — significant illiquidity risk",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/groq-stock"},
+{h:"GroqCloud: fastest publicly available LLM inference platform",s:"Groq",d:"2026",u:"https://groq.com"},
+{h:"Groq raises $640M at $2.8B valuation for LPU production scale",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"LPU vs GPU: why inference architecture matters for real-time AI",s:"Groq",d:"2025",u:"https://groq.com/lpu"},
+{h:"Groq benchmark: token generation speed comparison vs Nvidia",s:"Groq",d:"2025-2026",u:"https://groq.com"}
+]},
+{id:"psiquantum",n:"PsiQuantum",sect:"AI/ML",price:34.50,trend:-3.6,bid:35,ask:30,gp:true,gfr:"",
+sc:{rg:5.5,gm:6.0,nr:6.0,ve:7.5,mo:8.0,be:5.5,ep:5.5},
+desc:"PsiQuantum is building the world's first fault-tolerant quantum computer using photonic qubits manufactured on standard silicon chip fabrication lines — the same equipment used to make modern consumer chips. By using existing TSMC and GlobalFoundries infrastructure, PsiQuantum can scale to millions of qubits using proven processes.",
+ind:"Quantum computing — a category-creating technology with no current commercial competitors at scale.",
+rat:"PsiQuantum has the best secondary liquidity in the speculative deep-tech bucket with 68 live orders. Its photonic qubit approach on standard silicon fabs is the most credible engineering path to fault-tolerant quantum computing at commercial scale. The key risk is timeline — commercial deployment remains years away.",
+bull:"PsiQuantum demonstrates fault-tolerant quantum advantage for pharmaceutical and financial optimization by 2028-2030. Acquisition by a major semiconductor company at transformative premium.",
+neut:"Progress on qubit fidelity but commercial deployment delayed to 2030s. Government contracts provide sustaining revenue.",
+bear:"A competing quantum approach achieves commercial advantage first. Photonic approach proves to require error rates that are technically impossible at useful scale.",
+news:[
+{h:"PsiQuantum secures Australian government partnership for national quantum infrastructure",s:"PsiQuantum",d:"2025",u:"https://psiquantum.com"},
+{h:"PsiQuantum 68 live orders on Hiive — best liquidity in speculative deep-tech bucket",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/psiquantum-stock"},
+{h:"PsiQuantum raises $620M at $3.15B valuation backed by Goldman Sachs and BlackRock",s:"TechCrunch",d:"2023-2024",u:"https://techcrunch.com"},
+{h:"Why silicon photonics is the most scalable path to fault-tolerant quantum computing",s:"PsiQuantum",d:"2024-2025",u:"https://psiquantum.com/approach"},
+{h:"Quantum computing timeline: when will fault-tolerant QC be commercially useful?",s:"Nature",d:"2025",u:"https://www.nature.com"}
+]},
+{id:"figure-ai",n:"Figure AI",sect:"Robotics",price:140.57,trend:-10.0,bid:210,ask:137,gp:true,gfr:"",
+sc:{rg:6.0,gm:5.5,nr:6.0,ve:6.5,mo:7.0,be:5.0,ep:5.0},
+desc:"Figure AI builds humanoid robots for commercial deployment in warehouses and manufacturing. Its Figure 02 robot is deployed with BMW in automotive manufacturing, powered by an OpenAI partnership. The company raised $675M from Microsoft, OpenAI, Nvidia, Intel Capital, and AWS.",
+ind:"Humanoid robotics — competes with Tesla Optimus, Boston Dynamics, and Apptronik for commercial deployment.",
+rat:"Figure AI's -10% three-month trend reflects investor recalibration after humanoid hype — the BMW deployment is genuine validation, but the path from hundreds to tens of thousands of units is longer and more capital-intensive than early valuations implied.",
+bull:"Humanoid robots reach cost parity with human labor in warehouse applications by 2028. Figure deploys thousands of units to logistics and automotive customers.",
+neut:"Figure deploys hundreds of robots by 2028 but production scale takes until 2030. Exit via strategic acquisition.",
+bear:"Tesla Optimus production ramp is faster and cheaper. Figure burns through capital before achieving production scale.",
+news:[
+{h:"Figure AI partners with BMW for Figure 02 commercial factory deployment",s:"Figure AI",d:"2024-2025",u:"https://figure.ai"},
+{h:"Figure AI raises $675M from Microsoft, OpenAI, Nvidia, and Amazon consortium",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Figure AI -10% three-month secondary trend — humanoid timeline recalibration",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/figure-ai-stock"},
+{h:"Figure AI valuation analysis and investment thesis",s:"TSG Invest",d:"2025-2026",u:"https://tsginvest.com"},
+{h:"Humanoid robotics market outlook 2026-2030",s:"Figure AI",d:"2025",u:"https://figure.ai/blog"}
+]},
+{id:"apptronik",n:"Apptronik",sect:"Robotics",price:54.33,trend:34.9,bid:65,ask:65,gp:true,gfr:"",
+sc:{rg:6.0,gm:5.5,nr:6.0,ve:7.0,mo:7.0,be:5.5,ep:5.0},
+desc:"Apptronik builds Apollo, a humanoid robot developed with NASA Johnson Space Center roots, designed for logistics, manufacturing, and healthcare. It has a deep partnership with Google DeepMind for AI model integration.",
+ind:"Humanoid robotics — competes with Figure AI, Tesla Optimus, and Boston Dynamics.",
+rat:"Apptronik's +34.9% three-month trend shows stronger secondary market momentum than Figure AI, reflecting NASA pedigree and Google DeepMind partnership as differentiators. The overall category faces the same timeline challenge: commercial scale is 3-5 years away.",
+bull:"NASA and Google DeepMind partnership gives Apollo a durable technical edge. Logistics and healthcare deployments scale meaningfully in 2027.",
+neut:"Apollo reaches hundreds of units deployed by 2028. Google deepens partnership, potentially leading to acquisition.",
+bear:"Tesla Optimus and Figure AI have better-funded scale-up plans. Smaller capital base limits production ramp speed.",
+news:[
+{h:"Apptronik +34.9% three-month secondary — stronger momentum than peer Figure AI",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/apptronik-stock"},
+{h:"Apptronik partners with Google DeepMind for Apollo AI integration",s:"Apptronik",d:"2024-2025",u:"https://apptronik.com"},
+{h:"Apptronik Apollo humanoid robot: product overview",s:"Apptronik",d:"2025-2026",u:"https://apptronik.com/apollo"},
+{h:"NASA-lineage robotics: from space exploration to commercial humanoids",s:"Apptronik",d:"2024",u:"https://apptronik.com/blog"},
+{h:"Humanoid robotics competitive landscape 2026",s:"Apptronik",d:"2026",u:"https://apptronik.com"}
+]},
+{id:"gecko",n:"Gecko Robotics",sect:"Robotics",price:44.77,trend:-3.7,bid:50,ask:43,gp:true,gfr:"",
+sc:{rg:7.0,gm:6.5,nr:7.5,ve:7.5,mo:7.5,be:7.0,ep:6.5},
+desc:"Gecko Robotics deploys wall-climbing, swimming, and flying robots to inspect critical industrial infrastructure — Navy warships, power plants, pipelines, and refineries — feeding data into its AI predictive maintenance platform Cantilever, which manages over 500,000 critical assets. Industrial unplanned downtime costs approximately $50B per year globally.",
+ind:"Industrial AI and robotics for infrastructure inspection — creating a new category of AI-powered predictive infrastructure maintenance.",
+rat:"Gecko's 7.5 NRR score reflects multi-year service contracts with industrial and defense customers — once robots are integrated into a facility's maintenance operations and Cantilever is managing the asset base, switching would require re-inspecting thousands of assets and rebuilding years of baseline data.",
+bull:"Expands from Navy to Air Force, power utilities, and global energy infrastructure. Cantilever grows to 2M+ assets. Revenue reaches $200-300M by 2028.",
+neut:"Industrial inspection grows at 30-40% annually. UAE factory opens. Acquisition by industrial conglomerate or defense prime.",
+bear:"Traditional inspection companies adopt competing robotic solutions. Navy IDIQ ceiling of $71M proves to be the ceiling, not floor.",
+news:[
+{h:"Gecko Robotics wins largest Navy robotics contract — $71M IDIQ covering 18 Pacific Fleet ships",s:"TSG Invest",d:"Mar 2026",u:"https://tsginvest.com/gecko-robotics/"},
+{h:"Gecko Robotics reaches $1.25B unicorn valuation — Series D led by Cox Enterprises",s:"Ziegler Substack",d:"2025",u:"https://ziegler.substack.com"},
+{h:"Gecko to build UAE factory by 2026 in ADNOC partnership",s:"CB Insights",d:"Nov 2025",u:"https://www.cbinsights.com/company/gecko-robotics"},
+{h:"Gecko Robotics: AI-powered infrastructure inspection platform",s:"Gecko Robotics",d:"2026",u:"https://www.geckorobotics.com"},
+{h:"Industrial infrastructure inspection market — the $50B unplanned downtime opportunity",s:"Gecko Robotics",d:"2025",u:"https://www.geckorobotics.com/resources"}
+]},
+{id:"sambanova",n:"SambaNova Systems",sect:"AI/ML",price:26.16,trend:8.1,bid:30,ask:30,gp:true,gfr:"",
+sc:{rg:7.0,gm:6.5,nr:6.5,ve:7.5,mo:7.0,be:6.0,ep:6.0},
+desc:"SambaNova Systems builds custom AI chips and full-stack AI platforms for enterprises and governments needing dedicated, high-performance AI infrastructure deployed on-premise or in private cloud. Its DataScale system provides turnkey AI compute for organizations that cannot use public cloud due to data privacy requirements.",
+ind:"Enterprise AI infrastructure and custom chips — competes with Nvidia for on-premise enterprise AI deployments and with Cerebras in chip performance benchmarks.",
+rat:"SambaNova's +8.1% three-month trend reflects steady secondary interest in the on-premise AI infrastructure thesis. Its positioning is strategically valuable as privacy concerns push regulated organizations away from cloud AI. However, Nvidia's DGX systems dominate this market.",
+bull:"Enterprise AI data privacy regulation mandates on-premise deployment globally. SambaNova wins large government and financial services contracts.",
+neut:"Grows in the on-premise AI niche with revenue reaching $200-400M by 2028.",
+bear:"Nvidia dominates enterprise on-premise AI with superior distribution. Cloud AI privacy solutions reduce the need for on-premise alternatives.",
+news:[
+{h:"SambaNova DataScale deployed at US national laboratories",s:"SambaNova",d:"2024-2025",u:"https://sambanova.ai"},
+{h:"SambaNova raises $676M at $5B+ valuation backed by SoftBank, Intel Capital, and GIC",s:"TechCrunch",d:"2023-2024",u:"https://techcrunch.com"},
+{h:"SambaNova +8.1% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/sambanova-systems-stock"},
+{h:"SambaNova SN40L chip: purpose-built for generative AI",s:"SambaNova",d:"2024",u:"https://sambanova.ai/products/sn40l"},
+{h:"Enterprise AI privacy: the case for on-premise deployment",s:"SambaNova",d:"2025",u:"https://sambanova.ai/blog"}
+]},
+{id:"lambda",n:"Lambda",sect:"AI/ML",price:48.44,trend:-26.7,bid:51,ask:48.5,gp:true,gfr:"",
+sc:{rg:8.0,gm:6.0,nr:7.0,ve:8.0,mo:6.5,be:6.5,ep:6.5},
+desc:"Lambda provides GPU cloud infrastructure designed for AI training and research workloads, serving AI companies, universities, and research labs with on-demand and reserved compute at competitive prices. It was among the first GPU cloud providers to scale specifically for AI training workloads.",
+ind:"GPU cloud computing — competes with CoreWeave which is now publicly listed, Crusoe, and AI-specific GPU cloud offerings from AWS, Google, and Azure.",
+rat:"Lambda's -26.7% three-month trend is the second-worst in the Hiive50, creating a potential contrarian entry point — or warning signal of deeper structural problems. The revenue growth score of 8.0 reflects strong underlying GPU demand, but the moat score of 6.5 reflects concern that CoreWeave's public capital creates a sustained competitive disadvantage.",
+bull:"Lambda's developer-friendly pricing wins long-term contracts from AI labs preferring an independent provider. GPU shortage continues through 2026.",
+neut:"Steady growth but margin compression limits profitability. Acquisition by a larger cloud provider at moderate premium.",
+bear:"CoreWeave's public capital allows aggressive pricing undercuts. AWS and Google dedicated AI compute regions capture Lambda's core customer base.",
+news:[
+{h:"Lambda -26.7% three-month secondary — second-worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/lambda-stock"},
+{h:"Lambda raises $320M at $1.5B valuation for GPU cloud expansion",s:"TechCrunch",d:"2023-2024",u:"https://techcrunch.com"},
+{h:"CoreWeave IPO: implications for private GPU cloud competitors",s:"CoreWeave",d:"Mar 2025",u:"https://www.coreweave.com"},
+{h:"Lambda GPU cloud: pricing and product overview",s:"Lambda",d:"2026",u:"https://lambdalabs.com"},
+{h:"AI compute market outlook: GPU supply and demand dynamics in 2026",s:"Lambda",d:"2026",u:"https://lambdalabs.com/blog"}
+]},
+{id:"ripple",n:"Ripple Labs",sect:"Crypto",price:123.64,trend:-2.0,bid:125,ask:110,gp:true,gfr:"",
+sc:{rg:6.5,gm:7.5,nr:6.5,ve:6.0,mo:7.0,be:7.5,ep:5.5},
+desc:"Ripple develops the XRP Ledger and its On-Demand Liquidity product enabling real-time cross-border payments for financial institutions using XRP as a bridge currency. It settled a landmark SEC lawsuit in 2023. With 142 active orders it is the most liquid name in the entire Hiive50.",
+ind:"Crypto payments infrastructure — competes with SWIFT for international wire transfers and other blockchain-based payment networks.",
+rat:"Ripple is the most liquid name in the Hiive50 with 142 live orders. Its SEC legal victory removed the primary regulatory overhang. The valuation entry score of 6.0 reflects a secondary price stretched relative to the near-term revenue trajectory and the only 8% IPO probability.",
+bull:"XRP becomes the preferred settlement currency for international remittances. CBDC partnerships position Ripple as critical financial infrastructure.",
+neut:"ODL grows steadily but SWIFT's GPI upgrade limits addressable market. Revenue grows at 20-30% annually.",
+bear:"New SEC chair reopens scrutiny. SWIFT completes GPI modernization, eliminating the key ODL pain point.",
+news:[
+{h:"Ripple Labs — most liquid Hiive50 name with 142 live orders",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/ripple-labs-stock"},
+{h:"Ripple wins landmark SEC battle — XRP ruled non-security in programmatic sales",s:"CoinDesk",d:"2023-2024",u:"https://www.coindesk.com"},
+{h:"Ripple On-Demand Liquidity expands to 40+ global payment corridors",s:"Ripple",d:"2025-2026",u:"https://ripple.com/solutions/crypto-liquidity/"},
+{h:"Ripple IPO probability at 8% — management historically resistant to going public",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Ripple Labs revenue, valuation, and funding analysis",s:"Sacra",d:"2025",u:"https://sacra.com"}
+]},
+{id:"varda",n:"Varda Space Industries",sect:"Space",price:29.74,trend:32.5,bid:30,ask:30,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:7.5,mo:8.0,be:6.5,ep:6.0},
+desc:"Varda Space manufactures pharmaceuticals and advanced materials in Earth's orbit, then returns them to Earth. Certain drug compounds crystallize in superior forms in microgravity that cannot be replicated terrestrially. Varda has completed six missions through May 2026 and is the only commercial company operating a repeat-mission space manufacturing service.",
+ind:"Space manufacturing and in-orbit industrial services — creating an entirely new industrial category with no direct commercial competitors at operational scale.",
+rat:"Varda's +32.5% three-month trend reflects growing appreciation for its manufacturing-in-space capability. Its moat score of 8.0 reflects a 5-10 year head start in repeat-mission space manufacturing — the combination of reentry vehicle technology, manufacturing protocols, and regulatory relationships represents an enormous lead.",
+bull:"Varda's pharmaceutical manufacturing proves to produce superior drug compounds receiving FDA approval. Space pharmaceutical market reaches $1B+ by 2030.",
+neut:"Signs research partnerships with major pharma companies. Revenue grows slowly as FDA regulatory pathway is established.",
+bear:"FDA pathway proves considerably longer than expected. Launch costs remain too high to be economically competitive.",
+news:[
+{h:"Varda completes sixth mission — first of 2026, advances hypersonic flight testing",s:"Varda Media Center",d:"2026",u:"https://www.varda.com/media"},
+{h:"Varda +32.5% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/varda-space-industries-stock"},
+{h:"Varda raises $53M Series A backed by Founders Fund",s:"TechCrunch",d:"2022",u:"https://techcrunch.com"},
+{h:"How microgravity enables pharmaceutical manufacturing not possible on Earth",s:"Varda",d:"2024-2025",u:"https://www.varda.com/science"},
+{h:"Varda Space: mission history and technology overview",s:"Varda",d:"2026",u:"https://www.varda.com"}
+]},
+{id:"glean",n:"Glean",sect:"AI/ML",price:42.49,trend:-21.9,bid:50,ask:42.5,gp:true,gfr:"",
+sc:{rg:7.5,gm:7.0,nr:7.5,ve:5.5,mo:5.5,be:6.5,ep:5.5},
+desc:"Glean is an enterprise AI search and knowledge platform that connects to all company data sources — Slack, Google Drive, Salesforce, Jira, Confluence — and provides a unified AI assistant across the enterprise. Its key value proposition is that employees can ask questions in natural language and get answers synthesizing information from every tool the company uses.",
+ind:"Enterprise AI search and productivity — competes directly with Microsoft Copilot bundled with Office 365, Google Workspace AI, and Notion AI, all with massive built-in distribution advantages.",
+rat:"Glean's -21.9% three-month trend is the worst in the Hiive50, reflecting concern about Microsoft Copilot's rapid enterprise expansion into Glean's core market. The moat score of 5.5 captures this existential competitive threat — Microsoft has Office 365 on hundreds of millions of enterprise desktops and can bundle Copilot at no additional cost.",
+bull:"Enterprises prefer vendor-neutral AI search across all tools. Glean's multi-source integration becomes a competitive advantage. Strong NRR of 130%+ reflects genuine stickiness.",
+neut:"Grows at 40-50% but perpetually in Microsoft Copilot's shadow. Revenue reaches $300-500M by 2028. Acquisition by Salesforce or ServiceNow.",
+bear:"Microsoft Copilot captures the enterprise search budget before Glean builds sufficient switching costs. The -21.9% trend reflects structural competitive displacement.",
+news:[
+{h:"Glean -21.9% three-month secondary — worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/glean-stock"},
+{h:"Glean raises $200M at $4.6B valuation from Kleiner Perkins",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Microsoft Copilot for Microsoft 365 expands enterprise AI search",s:"Microsoft",d:"2025-2026",u:"https://www.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot"},
+{h:"Glean enterprise AI search platform overview",s:"Glean",d:"2026",u:"https://www.glean.com"},
+{h:"Enterprise AI search market: vendor-neutral vs bundled",s:"Forrester",d:"2025",u:"https://www.forrester.com"}
+]},
+{id:"polymarket",n:"Polymarket",sect:"Fintech",price:152.31,trend:-0.5,bid:165,ask:155,gp:true,gfr:"",
+sc:{rg:6.5,gm:7.0,nr:6.0,ve:5.5,mo:6.0,be:6.0,ep:6.0},
+desc:"Polymarket is a decentralized prediction market platform built on the Polygon blockchain allowing users to trade on real-world event outcomes using stablecoins. It processed $21.5B in trading volume in 2025 and only began charging fees in January 2026. The ICE investment of $2B at an $8B valuation was the most important signal of institutional legitimacy.",
+ind:"Prediction markets and event trading — a direct competitor to Kalshi but operating as a crypto-native platform versus Kalshi's CFTC-regulated exchange model.",
+rat:"Polymarket ranks in the B tier primarily due to entry price: at approximately $19B implied valuation with only months of fee revenue history, investors are paying a significant premium on an unproven monetization model. Kalshi in the same category has $1.5B in proven annualized revenue at $22B — a materially better entry on every revenue multiple basis.",
+bull:"POLY token launches cleanly. ICE data partnership scales to Bloomberg integration. Fee revenue reaches $500M+ annualized as volume compounds.",
+neut:"Fee revenue stabilizes at $150-200M annualized but the $19B valuation proves too expensive. Moderate outcome at exit.",
+bear:"POLY token classified as a security. Regulatory action from CFTC or SEC freezes US user growth. Election-cycle volume normalizes to $2-3B monthly.",
+news:[
+{h:"Polymarket begins charging fees after $21.5B in zero-fee trading volume",s:"Hiive",d:"Jan 2026",u:"https://www.hiive.com/securities/polymarket-stock"},
+{h:"ICE invests $2B in Polymarket at $8B — NYSE owner validates prediction market thesis",s:"AI Funding Tracker",d:"Oct 2025",u:"https://aifundingtracker.com/top-50-ai-startups/"},
+{h:"Polymarket revenue and valuation analysis",s:"Sacra",d:"2026",u:"https://sacra.com"},
+{h:"Polymarket vs Kalshi: comparing the two major US prediction markets",s:"Kalshi",d:"2026",u:"https://kalshi.com"},
+{h:"Polymarket POLY token: what we know about the planned launch",s:"Polymarket",d:"2025-2026",u:"https://polymarket.com"}
+]},
+{id:"sandboxaq",n:"SandboxAQ",sect:"AI/ML",price:20.88,trend:8.0,bid:20,ask:null,gp:true,gfr:"",
+sc:{rg:7.0,gm:7.0,nr:7.0,ve:8.0,mo:8.0,be:7.0,ep:6.5},
+desc:"SandboxAQ is an Alphabet spin-out combining AI and quantum computing for cybersecurity, drug discovery, materials simulation, and navigation. Its AQtive Guard protects organizations from future quantum computer attacks on encryption. AQNav provides a GPS-alternative using Earth's magnetic field that cannot be jammed.",
+ind:"AI-quantum enterprise software — category-creating intersection of quantum computing and AI serving defense, healthcare, and financial services.",
+rat:"SandboxAQ's Alphabet lineage provides enterprise credibility and distribution advantages independent quantum startups lack. Its post-quantum cryptography product addresses a real and urgent enterprise problem — quantum computers capable of breaking current encryption are 5-10 years away. Eric Schmidt's chairmanship and US Air Force AQNav testing provide high-credibility validation.",
+bull:"Post-quantum cryptography becomes mandatory for all financial institutions and government agencies. SandboxAQ's deployment head start creates a reference customer moat.",
+neut:"AQtive Guard grows in regulated industries. Acquisition by Google or a major security company.",
+bear:"IBM or Microsoft builds competing post-quantum tools bundled with existing enterprise relationships. Quantum timeline extends, reducing urgency.",
+news:[
+{h:"SandboxAQ named TIME100 Most Influential Company 2025",s:"SandboxAQ",d:"2025",u:"https://www.sandboxaq.com/company/news"},
+{h:"US Air Force testing SandboxAQ AQNav GPS-alternative navigation system",s:"SandboxAQ",d:"2025-2026",u:"https://www.sandboxaq.com/solutions/aqnav"},
+{h:"SandboxAQ raises $950M+ at $5.75B valuation — Eric Schmidt as chairman",s:"XYZEO",d:"2024-2025",u:"https://xyzeo.com/product/sandboxaq"},
+{h:"SandboxAQ AQtive Guard: post-quantum cryptography protection",s:"SandboxAQ",d:"2025",u:"https://www.sandboxaq.com/solutions/aqtive-guard"},
+{h:"SandboxAQ AQtive Guard deployed at Saudi Aramco and Bahrain sovereign entities",s:"SandboxAQ",d:"2024-2025",u:"https://www.sandboxaq.com/company/news"}
+]},
+{id:"commure",n:"Commure",sect:"Other",price:31.37,trend:17.4,bid:30,ask:30,gp:true,gfr:"",
+sc:{rg:7.0,gm:7.0,nr:7.0,ve:7.5,mo:7.0,be:7.0,ep:6.5},
+desc:"Commure is a healthcare AI platform building clinical applications that automate documentation tasks for physicians. Its ambient documentation product listens to patient-physician conversations and automatically generates clinical notes, reducing physician burnout. It serves health systems and physician groups addressing the burnout crisis.",
+ind:"Healthcare AI and clinical workflow automation — competes with Microsoft Nuance, Abridge, and AI scribing startups.",
+rat:"Healthcare AI is one of the most defensible verticals in enterprise software — switching costs are high, regulatory compliance creates barriers, and clinical workflow automation has documented ROI. Commure's +17.4% three-month trend reflects growing market conviction.",
+bull:"AI ambient documentation becomes standard physician workflow. Commure wins health system contracts creating multi-year embedded revenue.",
+neut:"Grows steadily but Abridge and Microsoft Nuance competition limits market share. Acquisition by Epic, Oracle Health, or a major health insurer.",
+bear:"Epic bundles its own AI documentation product. Microsoft Nuance's hospital relationships give it distribution advantage.",
+news:[
+{h:"Commure +17.4% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/commure-stock"},
+{h:"Physician burnout crisis drives demand for AI clinical documentation",s:"AMA",d:"2025-2026",u:"https://www.ama-assn.org"},
+{h:"Commure healthcare AI platform overview",s:"Commure",d:"2026",u:"https://commure.com"},
+{h:"AI ambient documentation market: competitive landscape 2026",s:"Healthcare IT News",d:"2025-2026",u:"https://www.healthcareitnews.com"},
+{h:"Commure raises funding for healthcare AI expansion",s:"TechCrunch",d:"2024-2025",u:"https://techcrunch.com"}
+]},
+{id:"synchron",n:"Synchron",sect:"Other",price:34.83,trend:9.9,bid:35.1,ask:35,gp:true,gfr:"",
+sc:{rg:5.0,gm:5.5,nr:6.0,ve:7.0,mo:8.5,be:5.0,ep:5.0},
+desc:"Synchron builds the Stentrode, a brain-computer interface implanted through blood vessels rather than open-brain surgery, allowing paralyzed patients to control computers using thoughts. Clinical trials have demonstrated successful thought-controlled computer interaction, with the endovascular approach dramatically reducing procedural risk compared to Neuralink.",
+ind:"Brain-computer interface — competes with Neuralink using a fundamentally less invasive approach that can be implanted at many more medical centers.",
+rat:"Synchron's 8.5 moat score reflects its genuinely differentiated endovascular implantation approach — reducing procedure risk dramatically versus Neuralink, potentially enabling adoption at far more medical centers. This is a long-dated binary investment with a 5-10 year commercial timeline.",
+bull:"Endovascular BCI proves safer and more scalable. FDA approval for broad paralysis applications by 2028-2030. Acquisition by a major medtech company for billions.",
+neut:"Completes early clinical trials and receives limited FDA approval for severe paralysis by 2028. Revenue negligible but clinical validation supports premium acquisition.",
+bear:"Neuralink's cortical implant proves superior in bandwidth despite higher risk. FDA approval extends beyond 2030.",
+news:[
+{h:"Synchron Stentrode BCI demonstrates thought-controlled computer interaction",s:"Synchron",d:"2024-2025",u:"https://synchron.com"},
+{h:"Synchron raises $75M Series C backed by Bill Gates and Jeff Bezos",s:"TechCrunch",d:"2022",u:"https://techcrunch.com"},
+{h:"Synchron +9.9% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/synchron-stock"},
+{h:"Stentrode clinical trial results in ALS patients",s:"New England Journal of Medicine",d:"2024",u:"https://www.nejm.org"},
+{h:"BCI regulatory pathway: FDA approval process for brain-computer interfaces",s:"FDA",d:"2024-2025",u:"https://www.fda.gov"}
+]},
+{id:"zipline",n:"Zipline",sect:"Other",price:57.67,trend:4.3,bid:59,ask:58,gp:true,gfr:"",
+sc:{rg:7.0,gm:6.5,nr:7.0,ve:7.5,mo:7.5,be:7.0,ep:6.5},
+desc:"Zipline operates autonomous delivery drones for medical supplies, food, and packages for healthcare systems, retailers, and governments. It has completed over one million commercial deliveries across four continents — more than any other drone delivery company. Its Platform 2 delivers to precise GPS coordinates without a fixed landing pad.",
+ind:"Autonomous drone delivery and logistics — competes with Wing from Google, Amazon Prime Air, and local drone delivery startups.",
+rat:"Zipline's one million completed deliveries is a genuine operational moat — no other drone delivery company has comparable real-world experience, regulatory relationships, or delivery network infrastructure. Its healthcare supply chain use case has proven, contracted revenue more defensible than consumer delivery.",
+bull:"Drone delivery receives streamlined regulatory approval. Healthcare and government contracts compound. Major retailer partnership transforms trajectory.",
+neut:"Grows steadily in healthcare and international markets. Revenue reaches $200-400M by 2028. Acquisition by logistics company or Amazon.",
+bear:"Amazon Prime Air and Wing use capital advantages to dominate consumer delivery. FAA hurdles slow US expansion.",
+news:[
+{h:"Zipline surpasses 1 million commercial drone deliveries — world record",s:"Zipline",d:"2024-2025",u:"https://flyzipline.com"},
+{h:"Zipline Platform 2: precise delivery to any GPS location",s:"Zipline",d:"2023-2024",u:"https://flyzipline.com/platform2"},
+{h:"Zipline +4.3% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/zipline-stock"},
+{h:"Zipline drone delivery partnership with Walmart",s:"Zipline",d:"2023-2024",u:"https://flyzipline.com"},
+{h:"FAA framework for commercial drone delivery operations",s:"FAA",d:"2024-2025",u:"https://www.faa.gov/uas/commercial_operators"}
+]},
+{id:"verkada",n:"Verkada",sect:"Cyber",price:10.95,trend:0.1,bid:12,ask:12,gp:true,gfr:"",
+sc:{rg:6.5,gm:7.5,nr:7.5,ve:7.5,mo:7.0,be:7.5,ep:6.5},
+desc:"Verkada sells a cloud-managed physical security platform including cameras, access control, environmental sensors, alarms, and intercoms, all managed through a unified SaaS interface. Its hardware-plus-subscription model disrupts legacy on-premise security from Honeywell and Axis. It serves schools, hospitals, commercial real estate, and enterprise campuses.",
+ind:"Physical security technology as SaaS — disrupting legacy on-premise security systems with a cloud-first, hardware-plus-subscription model.",
+rat:"Verkada's SaaS model on hardware creates strong NRR as customers add devices to existing subscriptions. Its nearly flat trend of +0.1% suggests stable secondary pricing. The cloud-managed physical security category is large, under-disrupted, and growing.",
+bull:"Verkada's cloud platform becomes the enterprise standard. AI-powered analytics add significant premium revenue. IPO in 2026-2027.",
+neut:"Grows at 30-40% with strong NRR. Revenue reaches $500-800M by 2028. IPO at moderate premium.",
+bear:"A high-profile security breach damages brand reputation. Axis Communications launches a competitive cloud offering.",
+news:[
+{h:"Verkada raises $205M at $3.2B valuation for cloud security expansion",s:"TechCrunch",d:"2023",u:"https://techcrunch.com"},
+{h:"Verkada +0.1% three-month secondary — stable pricing ahead of potential IPO",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/verkada-stock"},
+{h:"Verkada AI analytics: license plate recognition and occupancy tracking",s:"Verkada",d:"2025-2026",u:"https://www.verkada.com/products/cameras/"},
+{h:"Verkada cloud physical security platform overview",s:"Verkada",d:"2026",u:"https://www.verkada.com"},
+{h:"Physical security as SaaS: the disruption of legacy on-premise systems",s:"Verkada",d:"2025",u:"https://www.verkada.com/blog"}
+]},
+{id:"postman",n:"Postman",sect:"AI/ML",price:7.89,trend:-5.7,bid:6,ask:6,gp:true,gfr:"",
+sc:{rg:6.0,gm:7.5,nr:7.0,ve:7.5,mo:7.0,be:7.0,ep:5.5},
+desc:"Postman is the world's leading API development platform used by 33 million developers and 500,000 organizations globally. In March 2026 it launched an AI-powered API platform transforming the product into an AI-native API development operating system.",
+ind:"Developer tools and API infrastructure — competes with Swagger, SmartBear, and increasingly with AI-native coding tools like Cursor and GitHub Copilot.",
+rat:"Postman's 33 million developer user base is a genuine network effect moat embedded in standard enterprise API development workflows globally. Its 7.5 entry score reflects an attractive revenue-to-valuation ratio. The convergent bid-ask at $6 below the $7.89 market price suggests motivated sellers.",
+bull:"AI platform launch transforms Postman into an AI-native API operating system. Enterprise AI agent development requires API-first workflows.",
+neut:"Grows at 20-30% on existing developer base. AI platform adds incremental revenue. Strategic acquisition by Salesforce, ServiceNow, or GitHub.",
+bear:"AI coding tools like Cursor absorb API testing use cases. Developer tool market consolidates around full-stack environments.",
+news:[
+{h:"Postman launches AI platform for 33M developers",s:"VFS Research",d:"Mar 2026",u:"https://valueforstartups.in/postman_report"},
+{h:"Postman: $313M revenue at $5.6B valuation",s:"VFS Research",d:"Apr 2026",u:"https://valueforstartups.in/postman_report"},
+{h:"Postman -5.7% three-month secondary with bid and ask converging at $6",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/postman-stock"},
+{h:"Postman API platform: product overview",s:"Postman",d:"2026",u:"https://www.postman.com"},
+{h:"Postman raises $225M Series D at $5.6B valuation from Insight Partners",s:"Built In",d:"2021",u:"https://builtin.com/articles/postman-raises-225m-series-d-5b-valuation-API-unicorn"}
+]},
+{id:"mercury",n:"Mercury",sect:"Fintech",price:16.57,trend:5.1,bid:16.5,ask:13,gp:true,gfr:"",
+sc:{rg:7.5,gm:7.0,nr:7.5,ve:8.0,mo:7.0,be:7.5,ep:6.5},
+desc:"Mercury is a modern banking platform built specifically for startups and technology companies, offering business checking, savings, corporate cards, venture debt, and treasury management. It has become the default banking choice for Y Combinator-backed companies and more than doubled its valuation in a $300M Series C.",
+ind:"Fintech banking for startups — competes with Brex and Ramp for startup financial services, and with traditional banks historically underserving early-stage technology companies.",
+rat:"Mercury's 8.0 valuation entry score reflects a secondary price attractive relative to its growth trajectory. NRR of 7.5 reflects stickiness once banking, payroll, and treasury are all on Mercury. The more-than-doubled valuation in the Series C combined with +5.1% trend suggests business momentum.",
+bull:"Mercury becomes the de facto financial operating system for the next generation of technology companies. Treasury management and venture debt significantly increase revenue per customer.",
+neut:"Grows steadily but Brex, Ramp, and traditional banks limit market share expansion. Acquisition by a larger financial institution or fintech.",
+bear:"Heightened banking regulation increases compliance costs. Enterprise banks launch competitive startup-focused products.",
+news:[
+{h:"Mercury more than doubles valuation in $300M Series C",s:"Wezom Fintech Trends",d:"2026",u:"https://wezom.com/blog/fintech-development-trends-2026"},
+{h:"Mercury +5.1% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/mercury-stock"},
+{h:"Mercury banking platform: product overview for startups",s:"Mercury",d:"2026",u:"https://mercury.com"},
+{h:"Mercury expands into venture debt and treasury management",s:"Mercury",d:"2025",u:"https://mercury.com/blog"},
+{h:"Why Mercury became the default bank for YC companies",s:"Mercury",d:"2024-2025",u:"https://mercury.com"}
+]},
+{id:"addepar",n:"Addepar",sect:"Fintech",price:2.59,trend:-8.5,bid:2.5,ask:2.7,gp:true,gfr:"",
+sc:{rg:6.0,gm:7.5,nr:7.5,ve:7.0,mo:7.0,be:7.0,ep:5.5},
+desc:"Addepar is a wealth management platform managing reporting, analysis, and data aggregation for RIAs, family offices, and private banks. It manages $9 trillion in assets on platform across over 1,400 firms. Its platform handles all asset types including illiquid alternatives like private equity and real estate.",
+ind:"Wealth management technology — competes with Orion Advisor and Envestnet for RIA platform services.",
+rat:"Addepar's low share price of $2.59 reflects capital structure rather than business quality — $9T in AUM on platform is a genuine enterprise-scale metric, and NRR of 7.5 reflects strong client retention among wealth managers who build their entire reporting infrastructure around the platform.",
+bull:"Industry shift toward alternative assets plays directly to Addepar's multi-asset strength. Platform AUM reaches $20T+ by 2028. IPO as the definitive public wealth technology platform.",
+neut:"Grows steadily in its niche. Acquired by Fidelity, Schwab, or a major private bank at modest premium.",
+bear:"Salesforce Financial Services Cloud wins new RIA relationships. Alternative asset data aggregation becomes commoditized.",
+news:[
+{h:"Addepar surpasses $9T in assets under management on platform",s:"EquityZen",d:"2025-2026",u:"https://equityzen.com/company/addepar/"},
+{h:"Addepar raises $759M total at $3.25B valuation across seven rounds",s:"EquityZen",d:"2025",u:"https://equityzen.com/company/addepar/"},
+{h:"Addepar -8.5% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/addepar-stock"},
+{h:"Addepar platform: portfolio management for RIAs and family offices",s:"Addepar",d:"2026",u:"https://addepar.com"},
+{h:"Wealth management: the shift to alternatives drives platform demand",s:"Addepar",d:"2025",u:"https://addepar.com/blog"}
+]},
+{id:"consensys",n:"Consensys Software",sect:"Crypto",price:28.80,trend:-3.4,bid:30.5,ask:28.4,gp:true,gfr:"",
+sc:{rg:5.5,gm:6.5,nr:6.0,ve:6.5,mo:7.0,be:6.5,ep:5.0},
+desc:"Consensys builds foundational Ethereum developer infrastructure. MetaMask is the world's most used cryptocurrency wallet with over 30 million monthly active users. Infura provides the Ethereum node infrastructure that most applications use. Linea is its Ethereum Layer 2 network.",
+ind:"Ethereum infrastructure and developer tools — dominant provider competing with Alchemy and QuickNode on node services.",
+rat:"MetaMask's 30M+ active users creates a genuine consumer crypto moat. However, Consensys has faced SEC regulatory pressure and its current secondary price of $28.80 is significantly below the $7B valuation from its 2022 primary round.",
+bull:"Ethereum L2 expansion drives MetaMask to 100M+ users. Linea becomes a leading L2 network. Acquisition by a major fintech or exchange.",
+neut:"MetaMask maintains dominant position but growth moderates. Exit via IPO or acquisition in 3-5 years.",
+bear:"MetaMask faces SEC enforcement. Competing wallets gain market share. Ethereum's dominance challenged by alternative L1 blockchains.",
+news:[
+{h:"Consensys MetaMask surpasses 30M monthly active users",s:"Consensys",d:"2024-2025",u:"https://consensys.io"},
+{h:"Consensys raises $450M at $7B valuation — current secondary at significant discount",s:"TechCrunch",d:"2022",u:"https://techcrunch.com"},
+{h:"Consensys Linea Layer 2 launches as Ethereum scaling solution",s:"Consensys",d:"2023-2024",u:"https://linea.build"},
+{h:"Consensys -3.4% three-month secondary",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/consensys-software-stock"},
+{h:"MetaMask: the most used Ethereum wallet — how it works",s:"MetaMask",d:"2026",u:"https://metamask.io"}
+]},
+{id:"dataminr",n:"Dataminr",sect:"AI/ML",price:8.10,trend:-9.5,bid:8.08,ask:8,gp:true,gfr:"",
+sc:{rg:5.5,gm:6.5,nr:6.5,ve:7.0,mo:7.0,be:6.5,ep:5.5},
+desc:"Dataminr processes the entire global public information environment to detect breaking events and risks before they appear in mainstream news. Its platform serves government and defense agencies, media organizations, corporate security teams, and financial services firms.",
+ind:"Real-time AI intelligence and risk monitoring — a unique category serving government, media, corporate security, and financial services.",
+rat:"Dataminr's -9.5% three-month trend and low price suggest secondary market caution. However, government and defense contracts provide a stable and growing revenue base that is largely recession-resistant. Its real-time event detection capability is genuinely differentiated.",
+bull:"Geopolitical volatility drives government and enterprise demand to new highs. AI models compound data moat. Acquisition by defense or intelligence company.",
+neut:"Revenue grows at 15-25% annually. Government contracts provide stable base. Acquisition at moderate premium.",
+bear:"Social media platforms restrict data APIs. Bloomberg Terminal and intelligence services limit pricing power.",
+news:[
+{h:"Dataminr raises $475M at $4.1B valuation",s:"TechCrunch",d:"2021",u:"https://techcrunch.com"},
+{h:"Dataminr -9.5% three-month secondary at $8.10",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/dataminr-stock"},
+{h:"Dataminr government and defense AI intelligence contracts expand",s:"Dataminr",d:"2024-2025",u:"https://www.dataminr.com"},
+{h:"Dataminr real-time AI platform: how it detects events before mainstream news",s:"Dataminr",d:"2025-2026",u:"https://www.dataminr.com/products"},
+{h:"Dataminr Pulse: enterprise risk intelligence product",s:"Dataminr",d:"2026",u:"https://www.dataminr.com/pulse"}
+]},
+{id:"replit",n:"Replit",sect:"AI/ML",price:229.82,trend:-15.0,bid:261,ask:245,gp:true,gfr:"",
+sc:{rg:8.0,gm:6.5,nr:7.0,ve:7.0,mo:6.0,be:6.5,ep:5.5},
+desc:"Replit is an AI-powered collaborative coding and deployment platform that lets users build, run, and ship software entirely in the browser without any local setup. Its AI agent can build full applications from natural language descriptions, making software development accessible to non-developers.",
+ind:"AI coding and development platforms — competes with Cursor and GitHub Codespaces for professional developers, and with Lovable for non-developer application builders.",
+rat:"Replit's -15% three-month trend reflects concern about competition from better-capitalized peers. Cursor's $2B/month revenue run rate and GitHub Copilot's distribution make Replit's path to leadership difficult in the professional segment.",
+bull:"Replit's browser-based model becomes the preferred platform for non-professional developers building AI applications — a far larger addressable market.",
+neut:"Grows but monetization per user modest. Revenue reaches $100-200M by 2028. Acquisition by a major technology platform.",
+bear:"Cursor captures professional developers while no-code tools capture the non-developer market. Replit squeezed from both sides.",
+news:[
+{h:"Replit -15% three-month secondary — competitive pressure from Cursor and GitHub",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/replit-stock"},
+{h:"Cursor reaches $2B monthly revenue run rate — Replit's primary competitive threat",s:"Pre-IPO Stocks",d:"Feb 2026",u:"https://rss.buzzsprout.com/2079052.rss"},
+{h:"Replit AI agent: build applications from natural language",s:"Replit",d:"2025-2026",u:"https://replit.com/ai"},
+{h:"Replit raises $97M at $1.16B valuation from Andreessen Horowitz",s:"TechCrunch",d:"2023-2024",u:"https://techcrunch.com"},
+{h:"Browser-based IDE market: Replit's positioning vs desktop tools",s:"Replit",d:"2025",u:"https://replit.com/blog"}
+]},
+{id:"skydio",n:"Skydio",sect:"Defense",price:6.32,trend:4.0,bid:9,ask:7,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:8.0,mo:7.0,be:6.5,ep:6.5},
+desc:"Skydio builds the most autonomously capable drones in the world, using AI-powered obstacle avoidance for inspection, public safety, and military applications. It is the largest American drone manufacturer by units shipped domestically. The effective DJI ban for US government use makes Skydio the default domestic alternative.",
+ind:"Autonomous drones and defense UAV — competes internationally with DJI which is banned for US government use, and domestically with emerging US drone manufacturers.",
+rat:"Skydio benefits enormously from the effective DJI ban — it is the default domestic alternative for every US government agency needing drones. Its low secondary price of $6.32 creates an attractive entry multiple relative to business fundamentals for investors with a 5-7 year horizon.",
+bull:"DJI remains banned, making Skydio the default US government drone platform. Military demand accelerates. IPOs as the American drone platform at significant premium.",
+neut:"Government drone spending grows but procurement cycles are slow. Revenue grows 30-40% annually. Acquisition by defense prime.",
+bear:"DJI restrictions partially lifted or better-capitalized domestic competitor emerges. Military contracts go primarily to Anduril and Shield AI.",
+news:[
+{h:"Skydio named largest American drone manufacturer by domestic shipments",s:"Skydio",d:"2024-2025",u:"https://skydio.com"},
+{h:"Skydio raises $170M at $2.2B valuation — secondary at significant discount",s:"TechCrunch",d:"2022",u:"https://techcrunch.com"},
+{h:"US government DJI drone ban: implications for domestic manufacturers",s:"Department of Defense",d:"2023-2024",u:"https://www.defense.gov"},
+{h:"Skydio +4.0% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/skydio-stock"},
+{h:"Skydio X10: flagship enterprise and defense drone product overview",s:"Skydio",d:"2025-2026",u:"https://skydio.com/x10"}
+]},
+{id:"divergent",n:"Divergent",sect:"Other",price:31.78,trend:9.6,bid:32,ask:30,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:7.5,mo:7.5,be:6.5,ep:6.0},
+desc:"Divergent Technologies uses AI-optimized generative design and additive manufacturing to produce complex metal structures for automotive, aerospace, and defense applications that are impossible with conventional machining. Its AI designs structures that maximize strength-to-weight ratios far beyond human engineers.",
+ind:"AI-driven additive manufacturing — competing with traditional metal fabrication for structural components where strength-to-weight ratio is critical.",
+rat:"Divergent's combined AI design and manufacturing moat of 7.5 reflects that its software designs structures only its own processes can produce — the two capabilities are inseparable. Defense and aerospace tailwinds from hypersonic vehicle programs are strong.",
+bull:"Defense and aerospace adoption grows rapidly as hypersonic vehicles require AI-optimized structures. Divergent becomes essential for Anduril, Northrop, and SpaceX.",
+neut:"Grows in automotive and aerospace niches. Adoption cycles are long. Acquisition by a major aerospace company.",
+bear:"Competing additive manufacturing companies develop comparable AI optimization. Traditional aerospace develops in-house expertise.",
+news:[
+{h:"Divergent +9.6% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/divergent-stock"},
+{h:"Divergent raises $160M at $1.2B valuation",s:"TechCrunch",d:"2023",u:"https://techcrunch.com"},
+{h:"Divergent wins contracts for hypersonic vehicle structural components",s:"Divergent",d:"2024-2025",u:"https://divergent3d.com"},
+{h:"Divergent Technologies: AI generative design for metal additive manufacturing",s:"Divergent",d:"2025",u:"https://divergent3d.com/technology"},
+{h:"Additive manufacturing in aerospace and defense: market outlook",s:"Aviation Week",d:"2025",u:"https://aviationweek.com"}
+]},
+{id:"lyten",n:"Lyten",sect:"Other",price:9.34,trend:9.9,bid:8.8,ask:9.25,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.0,ve:8.0,mo:7.5,be:6.5,ep:6.0},
+desc:"Lyten has developed a lithium-sulfur battery technology using its proprietary 3D graphene material platform, targeting dramatically higher energy density — up to 2-5x lithium-ion — at potentially lower cost. The technology is being developed for EVs, drones, defense equipment, and grid storage, with the US Army as an early development partner.",
+ind:"Advanced battery technology — competing against CATL, Panasonic, and lithium-ion incumbents with a fundamentally different electrochemical approach.",
+rat:"Lyten's 3D graphene lithium-sulfur batteries, if they achieve commercial scale, would be genuinely disruptive. The US Army partnership and 8.0 valuation entry score make the current secondary price relatively attractive for the technology risk being taken.",
+bull:"Batteries achieve commercial production with 2x energy density at competitive cost. EV and defense applications generate $500M+ by 2030. Acquisition by a major battery manufacturer.",
+neut:"Technology proves out in limited high-value applications. Strategic investment from an automotive OEM bridges to commercial scale.",
+bear:"Lithium-sulfur cycle life challenges prove difficult to overcome at commercial scale. Established battery makers surpass energy density through lithium-ion improvements.",
+news:[
+{h:"Lyten US Army partnership for lithium-sulfur battery development",s:"Lyten",d:"2024-2025",u:"https://lyten.com"},
+{h:"Lyten raises $200M+ for 3D graphene battery scale-up",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Lyten +9.9% three-month secondary trend",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/lyten-stock"},
+{h:"3D graphene: Lyten's foundational material technology",s:"Lyten",d:"2024-2025",u:"https://lyten.com/technology"},
+{h:"Lithium-sulfur batteries: energy density and commercialization timeline",s:"Lyten",d:"2024",u:"https://lyten.com/news"}
+]},
+{id:"field-ai",n:"Field AI",sect:"Defense",price:38.83,trend:-2.0,bid:null,ask:null,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:7.5,mo:7.5,be:6.5,ep:5.5},
+desc:"Field AI builds autonomous robots and AI systems for GPS-denied unstructured physical environments — construction sites, disaster response zones, industrial facilities, underground infrastructure, and defense. Its technology focuses on the hardest autonomy problem: operating reliably when GPS and structured environments cannot be assumed.",
+ind:"Autonomous robotics for complex unstructured environments — niche within defense and industrial robotics where GPS-denied autonomy is the critical differentiator.",
+rat:"Field AI's 0 live orders on Hiive is the most significant risk factor — without an active order book, both entry and exit pricing are uncertain. The technology has genuine merit in GPS-denied autonomy, but the illiquidity risk must be explicitly priced into any investment decision.",
+bull:"GPS-denied autonomy proves critical for defense and disaster response. Field AI wins significant DoD contracts. Acquisition by Shield AI or Anduril.",
+neut:"Grows in niche industrial and defense market. Revenue reaches $50-100M by 2028. Acquisition at moderate premium.",
+bear:"Shield AI's Hivemind expands to ground robotics. Zero Hiive live orders make finding exit at fair value extremely difficult.",
+news:[
+{h:"Field AI -2.0% trend with 0 live Hiive orders — most illiquid name in index",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/field-ai-stock"},
+{h:"Field AI deploys autonomous systems in GPS-denied environments",s:"Field AI",d:"2024-2025",u:"https://field.ai"},
+{h:"Field AI raises early-stage defense venture funding",s:"Field AI",d:"2024",u:"https://field.ai"},
+{h:"GPS-denied navigation: the hardest problem in autonomous robotics",s:"IEEE Spectrum",d:"2024-2025",u:"https://spectrum.ieee.org"},
+{h:"Autonomous systems in GPS-contested environments: military requirements",s:"Department of Defense",d:"2024-2025",u:"https://www.defense.gov"}
+]},
+{id:"epic-games",n:"Epic Games",sect:"Other",price:238.14,trend:-34.2,bid:300,ask:255,gp:true,gfr:"",
+sc:{rg:5.5,gm:7.0,nr:6.5,ve:6.0,mo:7.5,be:7.0,ep:4.5},
+desc:"Epic Games creates Fortnite and the Unreal Engine, the industry-leading game development platform used in games, film, and architecture. Epic won a landmark antitrust case against Apple over App Store fees, potentially adding hundreds of millions in annual revenue.",
+ind:"Gaming platform and developer tools — Unreal Engine competes with Unity, while Fortnite competes with Roblox and Minecraft.",
+rat:"Epic's -34.2% three-month trend is the third-worst in the Hiive50, reflecting Fortnite's plateauing player count, 2023 layoffs, and CEO Tim Sweeney's resistance to an IPO. The Unreal Engine ecosystem moat is real and durable, but the consumer gaming thesis requires Fortnite to maintain cultural relevance.",
+bull:"Apple antitrust victory enables direct payment monetization. Unreal Engine expansion into film and architecture creates new licensing revenue. Fortnite revives.",
+neut:"Maintains Unreal Engine leadership and stable Fortnite audience. Revenue stable but growth modest.",
+bear:"Fortnite loses audience without major reinvention. Unity recovers and regains Unreal Engine competitive ground. No clear IPO path.",
+news:[
+{h:"Epic Games -34.2% three-month secondary — third-worst in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/epic-games-stock"},
+{h:"Epic wins landmark Apple App Store antitrust ruling enabling direct payments",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Unreal Engine 5 becomes industry standard for AAA gaming and virtual production",s:"Epic Games",d:"2024-2025",u:"https://www.unrealengine.com"},
+{h:"Epic Games IPO probability at only 4% on Kalshi",s:"MSN Finance",d:"May 2026",u:"https://www.msn.com/en-us/money/topstocks/2026-ipo-watchlist-openai-spacex-anthropic-discord-kraken-and-more/ar-AA1YVb1J"},
+{h:"Fortnite cultural relevance analysis: player count trends and competitive dynamics",s:"Epic Games",d:"2025",u:"https://epicgames.com"}
+]},
+{id:"farmer-dog",n:"The Farmer's Dog",sect:"Other",price:20.24,trend:-6.9,bid:null,ask:21,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:7.0,ve:7.5,mo:6.5,be:7.0,ep:6.0},
+desc:"The Farmer's Dog delivers fresh, human-grade dog food prepared in small batches shipped directly to subscribers on a personalized schedule. Each meal plan is customized to the dog's specific age, breed, weight, and health conditions. It is one of the fastest-growing pet food companies in the US.",
+ind:"Direct-to-consumer pet food subscription — competes with Ollie and traditional premium pet food brands from Purina and Royal Canin.",
+rat:"The Farmer's Dog has a 7.0 NRR score reflecting subscription model stickiness — once pet owners observe measurable health improvements, the subscription becomes emotionally sticky. The -6.9% trend with no active bid suggests a patient, long-horizon investment in a consumer brand without near-term IPO catalysts.",
+bull:"Fresh pet food becomes mainstream. Cat food expansion significantly expands total addressable market. Acquisition by General Mills, Nestlé, or Chewy.",
+neut:"Grows at 30-40% annually in premium pet food. Revenue reaches $500-800M by 2027. Acquisition at reasonable multiple.",
+bear:"Major pet food companies launch competitive fresh subscriptions with superior distribution.",
+news:[
+{h:"The Farmer's Dog raises $100M at $1.4B valuation",s:"TechCrunch",d:"2022-2023",u:"https://techcrunch.com"},
+{h:"Fresh pet food category growing 30%+ annually",s:"The Farmer's Dog",d:"2024-2025",u:"https://thefarmersdog.com"},
+{h:"The Farmer's Dog -6.9% secondary with no active bid",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/the-farmers-dog-stock"},
+{h:"How personalized fresh pet food works — The Farmer's Dog",s:"The Farmer's Dog",d:"2026",u:"https://thefarmersdog.com/why-fresh"},
+{h:"Pet food market trends: the rise of fresh, human-grade pet food",s:"Pet Food Industry",d:"2025",u:"https://www.petfoodindustry.com"}
+]},
+{id:"redwood",n:"Redwood Materials",sect:"Other",price:36.99,trend:-4.8,bid:35,ask:37,gp:true,gfr:"",
+sc:{rg:6.5,gm:6.0,nr:6.5,ve:7.0,mo:7.5,be:6.5,ep:6.0},
+desc:"Redwood Materials recycles lithium-ion batteries from EVs and consumer electronics to recover critical materials for reuse in new battery cells. It has created the first large-scale domestic US battery recycling supply chain, with facilities in Nevada and South Carolina processing batteries from Ford, Toyota, Panasonic, and Amazon.",
+ind:"Battery recycling and critical minerals recovery — creating a circular economy for EV batteries while reducing US dependence on Chinese-controlled lithium and cobalt supply chains.",
+rat:"Redwood's 7.5 moat score reflects the strategic national security importance of domestic battery material supply chains — the US government is actively subsidizing this category through the IRA. Redwood is the most operationally advanced domestic operator with facilities already processing at industrial scale.",
+bull:"EV adoption compounds battery recycling volumes. IRA credits make economics increasingly compelling. Acquisition by major automaker or battery manufacturer.",
+neut:"Grows steadily as more first-generation EV batteries reach end of life after 2027. Revenue reaches $500M-1B by 2028.",
+bear:"EV adoption slows. Chinese companies establish competitive US recycling operations. IRA incentives modified.",
+news:[
+{h:"Redwood Materials secures partnerships with Ford, Toyota, Panasonic",s:"Redwood Materials",d:"2023-2025",u:"https://redwoodmaterials.com"},
+{h:"Redwood raises $1B at $5B valuation for facility expansion",s:"TechCrunch",d:"2023",u:"https://techcrunch.com"},
+{h:"Inflation Reduction Act: battery recycling incentives for domestic manufacturers",s:"Department of Energy",d:"2022-2023",u:"https://www.energy.gov/infrastructure/inflation-reduction-act"},
+{h:"Redwood -4.8% three-month secondary",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/redwood-materials-stock"},
+{h:"Battery recycling economics: the case for circular EV supply chains",s:"Redwood Materials",d:"2024-2025",u:"https://redwoodmaterials.com/news"}
+]},
+{id:"whatnot",n:"Whatnot",sect:"Other",price:348.95,trend:2.0,bid:350,ask:358,gp:true,gfr:"",
+sc:{rg:7.5,gm:6.5,nr:7.0,ve:7.0,mo:7.0,be:7.0,ep:6.5},
+desc:"Whatnot is a live shopping and auction platform for collectibles, trading cards, sneakers, vintage clothing, and sports memorabilia. Sellers run live video auctions directly to their buyer communities. It has become the dominant platform for collector commerce in the US.",
+ind:"Live commerce and collectibles marketplace — competes with eBay for collectibles and with TikTok Shop and Instagram Shopping for the live video commerce format.",
+rat:"Whatnot's 7.0 moat score reflects its dominant position in the US collectibles vertical and the community network effects making its marketplace sticky. Its converging bid-ask at 350/358 suggests stable secondary pricing.",
+bull:"Live shopping becomes a dominant US e-commerce format. Whatnot captures collectibles and passion economy. GMV scales to $5B+ annually. Acquisition by eBay or Amazon.",
+neut:"Grows at 30-40% in US collectibles. Revenue reaches $200-400M by 2028. IPO or acquisition at moderate premium.",
+bear:"TikTok Shop or Instagram Shopping launches competitive live auction format. eBay responds aggressively.",
+news:[
+{h:"Whatnot raises $260M at $3.7B valuation from Andreessen Horowitz",s:"TechCrunch",d:"2022",u:"https://techcrunch.com"},
+{h:"Whatnot becomes dominant platform for trading card and collectibles live auctions",s:"Whatnot",d:"2024-2025",u:"https://www.whatnot.com"},
+{h:"Whatnot +2.0% three-month secondary — stable pricing",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/whatnot-stock"},
+{h:"Live commerce market in the US: can Whatnot replicate China's success?",s:"TechCrunch",d:"2024",u:"https://techcrunch.com"},
+{h:"Whatnot seller economics: how top collectors build businesses on live auctions",s:"Whatnot",d:"2025",u:"https://www.whatnot.com/blog"}
+]},
+// GATE FAILURES
+{id:"1x",n:"1X (US HoldCo)",sect:"Robotics",price:218.33,trend:-67.3,bid:450,ask:278,gp:false,
+gfr:"Fails Gate 3 — Burn runway: the -67.3% three-month secondary price collapse is the worst in the entire Hiive50 by a very large margin. This level of derating almost always reflects severe capital pressure or a major business setback. The extreme bid-ask spread of $450 bid versus $278 ask indicates a dysfunctional secondary market.",
+desc:"1X builds humanoid robots including the NEO home robot powered by its Redwood AI model trained on real-world household task data. It operates its own manufacturing facility in Norway with ambitious production targets of tens of thousands of units in 2026.",
+ind:"Humanoid robotics — competes with Figure AI, Tesla Optimus, and Apptronik.",
+rat:"1X fails the burn runway gate. The -67.3% three-month secondary collapse — the worst in the Hiive50 — combined with a dysfunctional $450/$278 bid-ask spread are the strongest possible warning signals in a private secondary market.",
+bull:"",neut:"",bear:"",
+news:[
+{h:"1X secondary price -67.3% — worst three-month decline in entire Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/1x-stock"},
+{h:"1X NEO humanoid robot targets home deployment at tens of thousands of units in 2026",s:"Contrary Research",d:"2025",u:"https://research.contrary.com/company/1x"},
+{h:"1X Redwood AI enables autonomous household task completion",s:"Ziegler Substack",d:"2025",u:"https://ziegler.substack.com"},
+{h:"1X raises $100M+ from OpenAI Fund and EQT Ventures",s:"TechCrunch",d:"2023",u:"https://techcrunch.com"},
+{h:"Understanding secondary market distress signals",s:"Hiive",d:"2025",u:"https://www.hiive.com/market-insights"}
+]},
+{id:"uphold",n:"Uphold",sect:"Crypto",price:1.62,trend:-44.9,bid:1,ask:2,gp:false,
+gfr:"Fails Gate 1 — Regulatory viability: Uphold faces ongoing regulatory actions and delisting risks creating existential business uncertainty. The -44.9% three-month secondary decline and $1.62 share price reflect a business under severe stress.",
+desc:"Uphold is a multi-asset digital trading platform allowing users to trade between cryptocurrencies, fiat currencies, precious metals, and equities.",
+ind:"Crypto trading platform — competes with Coinbase, Kraken, and other regulated exchanges.",
+rat:"Uphold fails Stage 1 on regulatory viability. A -44.9% three-month decline combined with a price near $1.62 and regulatory pressure signals fundamental business distress.",
+bull:"",neut:"",bear:"",
+news:[
+{h:"Uphold -44.9% three-month secondary — second-worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/uphold-stock"},
+{h:"Uphold faces regulatory scrutiny across multiple jurisdictions",s:"CoinDesk",d:"2024-2025",u:"https://www.coindesk.com"},
+{h:"How to read secondary market signals for distressed private assets",s:"Hiive",d:"2025",u:"https://www.hiive.com/market-insights"},
+{h:"Crypto exchange regulatory environment in 2026",s:"CFTC",d:"2026",u:"https://www.cftc.gov"},
+{h:"Uphold product and service overview",s:"Uphold",d:"2026",u:"https://uphold.com"}
+]},
+{id:"onebrief",n:"Onebrief",sect:"Defense",price:25.78,trend:-66.4,bid:null,ask:31,gp:false,
+gfr:"Fails Gate 3 — Burn runway: the -66.4% three-month secondary collapse is the second-worst in the Hiive50. Combined with pre-commercial revenue status and no active bids on the secondary market, this represents a high-risk situation.",
+desc:"Onebrief is a military planning software platform that modernizes how armed forces create and share operational plans, replacing legacy tools in defense headquarters with collaborative, real-time planning software.",
+ind:"Defense planning software — niche but strategically important within military command and control technology.",
+rat:"Onebrief fails Stage 1 gates due to a -66.4% three-month secondary collapse and insufficient verified commercial revenue at scale. The absence of any active bids on Hiive compounds the risk.",
+bull:"",neut:"",bear:"",
+news:[
+{h:"Onebrief -66.4% three-month secondary — second-worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/onebrief-stock"},
+{h:"Onebrief military planning software: modernizing operational planning",s:"Onebrief",d:"2024-2025",u:"https://onebrief.com"},
+{h:"DoD software procurement: why government sales cycles are so slow",s:"Defense News",d:"2024-2025",u:"https://www.defensenews.com"},
+{h:"Onebrief backed by defense-focused venture investors",s:"Onebrief",d:"2024",u:"https://onebrief.com"},
+{h:"Reading secondary market signals for early-stage defense tech",s:"Hiive",d:"2025",u:"https://www.hiive.com/market-insights"}
+]},
+{id:"thrive",n:"Thrive Market",sect:"Other",price:14.95,trend:-33.0,bid:null,ask:10,gp:false,
+gfr:"Fails Gate 5 — Exit path: -33% three-month secondary decline with no active bids and an ask of only $10 against a $14.95 market price signals no credible near-term exit path. The business faces structural competitive headwinds from Amazon and Whole Foods.",
+desc:"Thrive Market is an online membership-based marketplace for organic and natural products, offering members discounted pricing on health-focused food, supplements, and household products.",
+ind:"Online organic grocery and wellness marketplace — competes with Amazon Fresh, Whole Foods, and specialty organic retailers.",
+rat:"Thrive Market fails Stage 1 on the exit path gate. Its -33% three-month secondary decline with no active bids and a $10 ask below the $14.95 market price indicates the secondary market views this as a distressed situation.",
+bull:"",neut:"",bear:"",
+news:[
+{h:"Thrive Market -33% three-month secondary — no active bids, $10 ask below market",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/thrive-market-stock"},
+{h:"Thrive Market faces structural competition from Amazon and Whole Foods",s:"Thrive Market",d:"2024-2025",u:"https://thrivemarket.com"},
+{h:"Amazon Whole Foods integration: implications for organic grocery competitors",s:"Wall Street Journal",d:"2023-2025",u:"https://www.wsj.com"},
+{h:"Thrive Market product and membership overview",s:"Thrive Market",d:"2026",u:"https://thrivemarket.com"},
+{h:"DTC organic grocery: market challenges in 2026",s:"Thrive Market",d:"2025-2026",u:"https://thrivemarket.com"}
+]},
+{id:"reflection",n:"Reflection AI",sect:"AI/ML",price:309.99,trend:23.6,bid:400,ask:null,gp:false,
+gfr:"Fails Gate 4 — Revenue reality: Reflection AI has raised $4.5B+ at a $20B+ valuation but has not publicly released any product, model, or verifiable commercial revenue as of May 2026. Its coding agent Asimov remains on a waitlist and its flagship open-weight model has not been released. Paying $310/share means paying over $20B for zero verified revenue.",
+desc:"Reflection AI is building open-source frontier AI models founded by two DeepMind researchers. It has raised $4.5B+ from Nvidia, Sequoia, and JPMorgan at a $20B+ valuation but has not yet publicly released any model or product as of May 2026.",
+ind:"Foundation AI models — plans to compete with Meta Llama and Mistral in open-source AI with frontier-quality open-weight models.",
+rat:"Reflection AI fails Stage 1 on the revenue reality gate — it has raised over $4B at a $20B valuation without shipping a single public product. The secondary price of $309.99 represents pure speculative premium with no business fundamentals to anchor it.",
+bull:"",neut:"",bear:"",
+news:[
+{h:"Reflection AI seeking $2.5B at $20B+ — no products shipped as of March 2026",s:"Turing Post",d:"Mar 2026",u:"https://www.turingpost.com/p/reflectionai"},
+{h:"Reflection AI raises $2B at $8B valuation led by Nvidia",s:"Seeking Alpha",d:"Oct 2025",u:"https://seekingalpha.com/news/4569167-nvidia-backed-startup-reflection-builder-of-open-source-ai-models-seeks-2_5b-in-latest-round"},
+{h:"Inside Reflection AI: the $20B startup that has yet to ship",s:"Turing Post",d:"Mar 2026",u:"https://www.turingpost.com/p/reflectionai"},
+{h:"Reflection AI +23.6% secondary despite zero shipped products",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/reflection-ai-stock"},
+{h:"Open-source AI models: can Reflection compete with Meta Llama and Mistral?",s:"Turing Post",d:"Mar 2026",u:"https://www.turingpost.com/p/reflectionai"}
+]}
+];
+
+function w(s){if(!s)return 0;return+(s.rg*.20+s.gm*.18+s.nr*.17+s.ve*.15+s.mo*.15+s.be*.10+s.ep*.05).toFixed(2);}
+function tier(c){if(!c.gp)return'FAIL';const t=w(c.sc);if(t>=8.5)return'S';if(t>=7.0)return'A';if(t>=5.5)return'B';return'C';}
+function tcls(t){if(t==='S')return'bs';if(t==='A')return'ba';if(t==='B')return'bb';if(t==='C')return'bc';return'bf';}
+function fmt(v){if(v==null)return'—';return'$'+(v>=1000?v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):v.toFixed(2));}
+function tr(v){const s=v>=0?'+':'';const cl=v>1?'trend-pos':v<-1?'trend-neg':'trend-flat';return`<span class="${cl}">${s}${v.toFixed(1)}%</span>`;}
+function sbar(v){const pct=Math.round(v*10);let col=v>=8?'#639922':v>=6.5?'#185FA5':v>=5?'#EF9F27':'#E24B4A';return`<div class="sbar"><div class="sbar-track"><div class="sbar-fill" style="width:${pct}%;background:${col}"></div></div><span style="font-size:11px;font-weight:500;font-family:var(--mono);min-width:24px">${v.toFixed(1)}</span></div>`;}
+
+let expanded=null;
+function buildOv(c){
+  const gate=c.gp?`<div class="gate-ok"><i class="ti ti-circle-check" style="font-size:16px"></i> Passed all 5 stage-1 binary gates</div>`:`<div class="gate-fail-banner"><i class="ti ti-alert-circle" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i><strong>Gate fail:</strong> ${c.gfr}</div>`;
+  const mkt=`<div class="ov-grid"><div class="ov-field"><div class="ov-lbl">Hiive price</div><div class="ov-val">${fmt(c.price)}</div></div><div class="ov-field"><div class="ov-lbl">3M trend</div><div class="ov-val">${tr(c.trend)}</div></div><div class="ov-field"><div class="ov-lbl">Highest bid</div><div class="ov-val">${fmt(c.bid)}</div></div><div class="ov-field"><div class="ov-lbl">Lowest ask</div><div class="ov-val">${fmt(c.ask)}</div></div></div>`;
+  return`${gate}${mkt}<p class="desc-text">${c.desc}</p><p class="ind-text">${c.ind}</p><div class="rat-box"><div class="rat-lbl">Why ranked here</div><p class="rat-text">${c.rat}</p></div>`;
+}
+function buildSc(c){
+  if(!c.gp)return`<p style="font-size:13px;color:var(--text2);line-height:1.6">Scoring not applicable — company eliminated at Stage 1 gate filter before reaching the weighted scoring model.</p>`;
+  const s=c.sc;
+  const rows=[['Revenue growth (20%)',s.rg],['Gross margin (18%)',s.gm],['NRR / retention (17%)',s.nr],['Valuation entry (15%)',s.ve],['Moat / defensibility (15%)',s.mo],['Burn efficiency (10%)',s.be],['Exit path clarity (5%)',s.ep]].map(([l,v])=>`<div class="metric-row"><span class="metric-lbl">${l}</span><div class="metric-score-col">${sbar(v)}</div></div>`).join('');
+  return`<div class="composite-row"><span style="font-size:12px;color:var(--text2)">Composite score</span><span class="composite-big">${w(c.sc).toFixed(2)}</span><span class="badge ${tcls(tier(c))}">${tier(c)} tier</span></div>${rows}`;
+}
+function buildTh(c){
+  if(!c.gp||!c.bull)return`<p style="font-size:13px;color:var(--text2);line-height:1.6">Investment thesis not applicable for gate-failed companies.</p>`;
+  return`<div class="thesis-block tb-bull"><div class="thesis-lbl tl-bull">Bull case</div><p class="thesis-text">${c.bull}</p></div><div class="thesis-block tb-neut"><div class="thesis-lbl tl-neut">Neutral case</div><p class="thesis-text">${c.neut}</p></div><div class="thesis-block tb-bear"><div class="thesis-lbl tl-bear">Bear case</div><p class="thesis-text">${c.bear}</p></div>`;
+}
+function buildNw(c){
+  if(!c.news||!c.news.length)return`<p style="font-size:13px;color:var(--text2)">No citations available.</p>`;
+  const items=c.news.map(n=>`<div class="news-item"><a class="news-link" href="${n.u}" target="_blank" rel="noopener noreferrer"><div class="news-hl">${n.h} <i class="ti ti-external-link" style="font-size:11px;opacity:.5;vertical-align:1px"></i></div></a><div class="news-meta"><span class="news-source">${n.s}</span><span class="news-date">· ${n.d}</span></div><div class="news-sum">${n.sm||''}</div></div>`).join('');
+  return`<div class="news-header"><span class="news-header-lbl">${c.news.length} citation${c.news.length>1?'s':''} — click headline to open source in new tab</span></div>${items}`;
+}
+function stab(id,tab){
+  ['ov','sc','th','nw'].forEach(t=>{
+    const p=document.getElementById(`p-${id}-${t}`);
+    const b=document.getElementById(`t-${id}-${t}`);
+    if(p)p.classList.toggle('active',t===tab);
+    if(b)b.classList.toggle('active',t===tab);
+  });
+}
+function tog(id){
+  const inner=document.getElementById(`i-${id}`);
+  const row=document.getElementById(`r-${id}`);
+  if(!inner||!row)return;
+  if(expanded&&expanded!==id){
+    const pi=document.getElementById(`i-${expanded}`);
+    const pr=document.getElementById(`r-${expanded}`);
+    const pc=document.getElementById(`c-${expanded}`);
+    if(pi)pi.classList.remove('open');if(pr)pr.classList.remove('active');if(pc)pc.classList.remove('open');
+  }
+  const isOpen=inner.classList.contains('open');
+  inner.classList.toggle('open',!isOpen);row.classList.toggle('active',!isOpen);
+  const ch=document.getElementById(`c-${id}`);if(ch)ch.classList.toggle('open',!isOpen);
+  expanded=isOpen?null:id;
+}
+function applyFilters(){
+  const tv=document.getElementById('fTier').value;
+  const sv=document.getElementById('fSect').value;
+  const sort=document.getElementById('fSort').value;
+  let data=C.map(c=>({...c,_t:tier(c),_s:w(c.sc)}));
+  if(tv)data=data.filter(c=>c._t===tv);
+  if(sv)data=data.filter(c=>c.sect===sv);
+  const passed=data.filter(c=>c.gp);const failed=data.filter(c=>!c.gp);
+  const sf=(a,b)=>{if(sort==='score')return b._s-a._s;if(sort==='trend')return b.trend-a.trend;if(sort==='price')return b.price-a.price;if(sort==='rg')return b.sc.rg-a.sc.rg;if(sort==='ve')return b.sc.ve-a.sc.ve;if(sort==='mo')return b.sc.mo-a.sc.mo;return 0;};
+  passed.sort(sf);
+  renderRows([...passed,...failed]);
+  document.getElementById('countLbl').textContent=`Showing ${passed.length+failed.length} of ${C.length} companies`;
+}
+function renderRows(data){
+  const tbody=document.getElementById('tBody');tbody.innerHTML='';
+  let rank=0,lastTier=null;
+  const tl={S:'S tier — strong buy',A:'A tier — buy',B:'B tier — watch',C:'C tier — pass / hold',FAIL:'Failed stage 1 binary gates'};
+  data.forEach(c=>{
+    const t=tier(c);const score=w(c.sc);
+    if(t!==lastTier){const sep=document.createElement('tr');sep.className='tier-sep';sep.innerHTML=`<td colspan="8">${tl[t]}</td>`;tbody.appendChild(sep);lastTier=t;}
+    if(c.gp)rank++;
+    const hasTh=c.gp&&c.bull;
+    const dr=document.createElement('tr');dr.className='data-row';dr.id=`r-${c.id}`;dr.onclick=()=>tog(c.id);
+    dr.innerHTML=`<td style="text-align:right;color:var(--text3);font-size:11px;font-family:var(--mono)">${c.gp?rank:'—'}</td><td><div class="cname">${c.n}</div><div class="csect">${c.sect}</div></td><td><span class="csect">${c.sect}</span></td><td class="price-val">${fmt(c.price)}</td><td>${tr(c.trend)}</td><td>${c.gp?`<span class="score-val">${score.toFixed(2)}</span>`:'<span style="font-size:11px;color:var(--text3)">n/a</span>'}</td><td><span class="badge ${tcls(t)}">${t}</span></td><td><i class="ti ti-chevron-down chevron" id="c-${c.id}"></i></td>`;
+    tbody.appendChild(dr);
+    const er=document.createElement('tr');er.className='exp-row';
+    const thTab=hasTh?`<button class="tab-btn" id="t-${c.id}-th" onclick="event.stopPropagation();stab('${c.id}','th')">Investment thesis</button>`:'';
+    er.innerHTML=`<td colspan="8"><div class="exp-inner" id="i-${c.id}"><div class="exp-content"><div class="tabs"><button class="tab-btn active" id="t-${c.id}-ov" onclick="event.stopPropagation();stab('${c.id}','ov')">Overview</button><button class="tab-btn" id="t-${c.id}-sc" onclick="event.stopPropagation();stab('${c.id}','sc')">Scorecard</button>${thTab}<button class="tab-btn" id="t-${c.id}-nw" onclick="event.stopPropagation();stab('${c.id}','nw')">News & citations</button></div><div class="tab-pane active" id="p-${c.id}-ov">${buildOv(c)}</div><div class="tab-pane" id="p-${c.id}-sc">${buildSc(c)}</div>${hasTh?`<div class="tab-pane" id="p-${c.id}-th">${buildTh(c)}</div>`:''}<div class="tab-pane" id="p-${c.id}-nw">${buildNw(c)}</div></div></div></td>`;
+    tbody.appendChild(er);
+  });
+}
+const passed=C.filter(c=>c.gp).length;
+const sCount=C.filter(c=>c.gp&&w(c.sc)>=8.5).length;
+const aCount=C.filter(c=>c.gp&&w(c.sc)>=7.0&&w(c.sc)<8.5).length;
+const failCount=C.filter(c=>!c.gp).length;
+document.getElementById('statsRow').innerHTML=`
+<div class="stat-card"><div class="stat-n">50</div><div class="stat-l">Total companies</div></div>
+<div class="stat-card"><div class="stat-n">${passed}</div><div class="stat-l">Passed all gates</div></div>
+<div class="stat-card"><div class="stat-n">${sCount}</div><div class="stat-l">S tier — strong buy</div></div>
+<div class="stat-card"><div class="stat-n">${aCount}</div><div class="stat-l">A tier — buy</div></div>`;
+applyFilters();
+</script>
+</body>
+</html>
