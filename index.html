@@ -2,176 +2,292 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Hiive50 Private Market Rankings</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 :root {
-  --bg: #0A0A0F;
-  --bg2: #111118;
-  --bg3: #16161F;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.05);
-  --text: #F0EFE8;
-  --text2: #888780;
-  --text3: #4A4A52;
+  --bg: #07070D;
+  --bg2: #0D0D16;
+  --bg3: #12121C;
+  --bg4: #181825;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.04);
+  --border-accent: rgba(127,119,221,0.25);
+  --text: #EEEDF6;
+  --text2: #7E7D8A;
+  --text3: #3E3D4A;
   --accent: #7F77DD;
-  --teal: #1D9E75;
-  --amber: #EF9F27;
-  --red: #E24B4A;
-  --green: #639922;
-  --blue: #185FA5;
-  --font: 'IBM Plex Sans', sans-serif;
+  --accent2: #5B54B8;
+  --teal: #1DB980;
+  --amber: #F0A030;
+  --red: #E04B4A;
+  --green: #5AAA1A;
+  --blue: #2878CC;
+  --font: 'Space Grotesk', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
-  --radius: 6px;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --glow: 0 0 20px rgba(127,119,221,0.12);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; min-height: 100vh; }
-a { color: inherit; text-decoration: none; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* Scanline texture overlay */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);z-index:9999;}
+
+/* Subtle grid background */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;background-image:linear-gradient(rgba(127,119,221,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(127,119,221,0.03) 1px,transparent 1px);background-size:40px 40px;z-index:0;}
+
+.page-wrap{position:relative;z-index:1;}
 
 /* Header */
-.site-header { border-bottom: 1px solid var(--border); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; background: var(--bg2); position: sticky; top: 0; z-index: 100; }
-.site-title { font-size: 15px; font-weight: 600; letter-spacing: .02em; color: var(--text); }
-.site-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-.disclaimer { font-size: 10px; color: var(--text3); background: var(--bg3); border: 1px solid var(--border); padding: 4px 10px; border-radius: var(--radius); }
+.site-header{border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(13,13,22,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:500;color:#fff;letter-spacing:-.02em;box-shadow:0 0 16px rgba(127,119,221,0.4);}
+.site-title{font-size:14px;font-weight:600;letter-spacing:.01em;color:var(--text);}
+.site-sub{font-size:10px;color:var(--text2);margin-top:1px;font-family:var(--mono);}
+.disclaimer{font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:4px 10px;border-radius:20px;letter-spacing:.02em;}
 
 /* Stats */
-.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 20px 24px 0; }
-.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-.stat-n { font-size: 26px; font-weight: 600; font-family: var(--mono); color: var(--text); }
-.stat-l { font-size: 11px; color: var(--text2); margin-top: 3px; }
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:20px 24px 0;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s;}
+.stat-card:hover{border-color:var(--border-accent);}
+.stat-card:hover::before{opacity:1;}
+.stat-n{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--text);line-height:1;}
+.stat-n span{font-size:14px;color:var(--accent);margin-left:2px;}
+.stat-l{font-size:11px;color:var(--text2);margin-top:5px;letter-spacing:.02em;}
 
 /* Methodology banner */
-.method-bar { margin: 16px 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
-.method-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text3); flex-shrink: 0; }
-.weight-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--bg3); color: var(--text2); border: 1px solid var(--border); white-space: nowrap; }
+.method-bar{margin:16px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.method-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);flex-shrink:0;margin-right:8px;}
+.weight-tag{font-size:10px;padding:3px 9px;border-radius:20px;background:var(--bg3);color:var(--text2);border:1px solid var(--border);white-space:nowrap;font-family:var(--mono);}
 
 /* Controls */
-.controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 24px 16px; align-items: center; }
-.controls label { font-size: 11px; color: var(--text2); }
-.controls select { font-size: 12px; padding: 5px 10px; border-radius: var(--radius); background: var(--bg2); border: 1px solid var(--border); color: var(--text); font-family: var(--font); cursor: pointer; }
-.controls select:focus { outline: none; border-color: var(--accent); }
-.result-count { font-size: 11px; color: var(--text3); margin-left: auto; }
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:0 24px 16px;align-items:center;}
+.controls label{font-size:11px;color:var(--text2);letter-spacing:.02em;}
+.ctrl-select{font-size:12px;padding:6px 10px;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:var(--font);cursor:pointer;transition:border-color .15s;}
+.ctrl-select:focus{outline:none;border-color:var(--accent);}
+.result-count{font-size:11px;color:var(--text3);margin-left:auto;font-family:var(--mono);}
 
-/* Table */
-.table-wrap { padding: 0 24px 40px; overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-colgroup col:nth-child(1) { width: 32px; }
-colgroup col:nth-child(2) { width: 160px; }
-colgroup col:nth-child(3) { width: 80px; }
-colgroup col:nth-child(4) { width: 90px; }
-colgroup col:nth-child(5) { width: 80px; }
-colgroup col:nth-child(6) { width: 70px; }
-colgroup col:nth-child(7) { width: 60px; }
-colgroup col:nth-child(8) { width: 28px; }
-thead th { font-size: 10px; font-weight: 500; color: var(--text3); text-align: left; padding: 8px; border-bottom: 1px solid var(--border); white-space: nowrap; letter-spacing: .04em; text-transform: uppercase; }
-tbody td { padding: 9px 8px; border-bottom: 1px solid var(--border2); vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-tr.data-row { cursor: pointer; transition: background .1s; }
-tr.data-row:hover td, tr.data-row.active td { background: var(--bg2); }
-tr.exp-row td { padding: 0; border-bottom: 1px solid var(--border); }
-tr.tier-sep td { background: var(--bg2); font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; padding: 6px 8px; }
+/* ---- DESKTOP TABLE ---- */
+.table-wrap{padding:0 24px 40px;}
+.desktop-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.desktop-table colgroup col:nth-child(1){width:36px;}
+.desktop-table colgroup col:nth-child(2){width:170px;}
+.desktop-table colgroup col:nth-child(3){width:76px;}
+.desktop-table colgroup col:nth-child(4){width:94px;}
+.desktop-table colgroup col:nth-child(5){width:100px;}
+.desktop-table colgroup col:nth-child(6){width:82px;}
+.desktop-table colgroup col:nth-child(7){width:64px;}
+.desktop-table colgroup col:nth-child(8){width:54px;}
+.desktop-table colgroup col:nth-child(9){width:28px;}
+.desktop-table thead th{font-size:10px;font-weight:500;color:var(--text3);text-align:left;padding:8px 8px;border-bottom:1px solid var(--border);white-space:nowrap;letter-spacing:.05em;text-transform:uppercase;}
+.desktop-table tbody td{padding:10px 8px;border-bottom:1px solid var(--border2);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+tr.data-row{cursor:pointer;transition:background .12s;}
+tr.data-row:hover td,tr.data-row.active td{background:var(--bg2);}
+tr.exp-row td{padding:0;border-bottom:1px solid var(--border);}
+tr.tier-sep td{background:var(--bg2);font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:7px 8px;border-top:1px solid var(--border);}
 
-/* Expand panel */
-.exp-inner { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
-.exp-inner.open { max-height: 2400px; }
-.exp-content { padding: 20px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
+/* ---- MOBILE CARD LIST ---- */
+.mobile-list{display:none;padding:0 16px 40px;}
+.tier-label-mob{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:12px 0 6px;border-top:1px solid var(--border);margin-top:4px;}
+.tier-label-mob:first-child{border-top:none;}
+.company-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;}
+.company-card:hover,.company-card.active{border-color:var(--border-accent);box-shadow:var(--glow);}
+.card-main{padding:14px 14px 12px;display:flex;align-items:flex-start;gap:10px;}
+.card-rank{font-size:11px;color:var(--text3);font-family:var(--mono);min-width:18px;padding-top:2px;}
+.card-info{flex:1;min-width:0;}
+.card-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.card-sect{font-size:10px;color:var(--text2);font-family:var(--mono);}
+.card-right{text-align:right;flex-shrink:0;}
+.card-price{font-size:13px;font-family:var(--mono);font-weight:500;color:var(--text);margin-bottom:3px;}
+.card-badge-wrap{display:flex;justify-content:flex-end;}
+.card-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--border2);}
+.card-metric{padding:8px 12px;border-right:1px solid var(--border2);}
+.card-metric:last-child{border-right:none;}
+.card-metric-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.card-metric-val{font-size:11px;font-family:var(--mono);font-weight:500;color:var(--text);}
+.card-chevron{font-size:14px;color:var(--text3);transition:transform .2s;margin-top:2px;flex-shrink:0;}
+.card-chevron.open{transform:rotate(180deg);}
+
+/* ---- EXPAND PANEL (shared) ---- */
+.exp-inner{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.exp-inner.open{max-height:4000px;}
+.exp-content{padding:20px 20px;background:var(--bg3);border-top:1px solid var(--border);}
 
 /* Tabs */
-.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 18px; gap: 0; }
-.tab-btn { font-size: 12px; padding: 8px 16px; border: none; background: none; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: var(--font); transition: color .15s; }
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 500; }
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:18px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-size:12px;padding:8px 14px;border:none;background:none;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--font);transition:color .15s;white-space:nowrap;flex-shrink:0;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
 
 /* Badges */
-.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; font-family: var(--mono); }
-.bs { background: #1A3A0A; color: #7DC855; border: 1px solid #2D5A12; }
-.ba { background: #0A1E3A; color: #5B9BD5; border: 1px solid #122E5A; }
-.bb { background: #3A2A0A; color: #D4A445; border: 1px solid #5A3D12; }
-.bc { background: #2A2A2A; color: #888780; border: 1px solid #3A3A3A; }
-.bf { background: #3A0A0A; color: #D55B5B; border: 1px solid #5A1212; }
+.badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;font-weight:700;white-space:nowrap;font-family:var(--mono);letter-spacing:.04em;}
+.bs{background:rgba(90,170,26,0.15);color:#6CC020;border:1px solid rgba(90,170,26,0.3);}
+.ba{background:rgba(40,120,204,0.15);color:#5B9FDD;border:1px solid rgba(40,120,204,0.3);}
+.bb{background:rgba(240,160,48,0.15);color:#E09830;border:1px solid rgba(240,160,48,0.3);}
+.bc{background:rgba(126,125,138,0.12);color:#888780;border:1px solid rgba(126,125,138,0.2);}
+.bf{background:rgba(224,75,74,0.12);color:#D05858;border:1px solid rgba(224,75,74,0.25);}
+.bsell{background:rgba(224,75,74,0.18);color:#FF5F5E;border:1px solid rgba(224,75,74,0.4);text-transform:uppercase;letter-spacing:.06em;}
+
+/* Tier accent lines on rows */
+tr.data-row.tier-s td:first-child{box-shadow:inset 3px 0 0 #5AAA1A;}
+tr.data-row.tier-a td:first-child{box-shadow:inset 3px 0 0 #2878CC;}
+tr.data-row.tier-b td:first-child{box-shadow:inset 3px 0 0 #F0A030;}
+tr.data-row.tier-f td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
+.company-card.tier-s{border-left:3px solid rgba(90,170,26,0.5);}
+.company-card.tier-a{border-left:3px solid rgba(40,120,204,0.5);}
+.company-card.tier-b{border-left:3px solid rgba(240,160,48,0.4);}
+.company-card.tier-f{border-left:3px solid rgba(224,75,74,0.4);}
+.company-card.tier-sell{border-left:3px solid rgba(224,75,74,0.6);}
+tr.data-row.tier-sell td:first-child{box-shadow:inset 3px 0 0 #E04B4A;}
 
 /* Trend */
-.trend-pos { color: var(--teal); font-weight: 500; font-family: var(--mono); }
-.trend-neg { color: var(--red); font-weight: 500; font-family: var(--mono); }
-.trend-flat { color: var(--text2); font-family: var(--mono); }
-.price-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
-.score-val { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); }
-.chevron { display: inline-block; transition: transform .2s; font-size: 12px; color: var(--text3); }
-.chevron.open { transform: rotate(180deg); }
-.cname { font-weight: 500; font-size: 12px; color: var(--text); }
-.csect { font-size: 10px; color: var(--text2); }
+.trend-pos{color:var(--teal);font-weight:500;font-family:var(--mono);}
+.trend-neg{color:var(--red);font-weight:500;font-family:var(--mono);}
+.trend-flat{color:var(--text2);font-family:var(--mono);}
+.price-val{font-family:var(--mono);font-size:12px;color:var(--text);}
+.mcap-val{font-family:var(--mono);font-size:11px;color:var(--text2);}
+.score-val{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);}
+.chevron{display:inline-block;transition:transform .2s;font-size:12px;color:var(--text3);}
+.chevron.open{transform:rotate(180deg);}
+.cname{font-weight:600;font-size:13px;color:var(--text);}
+.csect{font-size:10px;color:var(--text2);font-family:var(--mono);}
 
-/* Overview tab */
-.gate-ok { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 12px; color: var(--teal); }
-.gate-fail-banner { background: rgba(211,85,85,0.12); border: 1px solid rgba(211,85,85,0.3); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #D55B5B; line-height: 1.6; white-space: normal; }
-.ov-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px; }
-.ov-field { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; }
-.ov-lbl { font-size: 10px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
-.ov-val { font-size: 13px; font-weight: 500; font-family: var(--mono); color: var(--text); }
-.desc-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; margin-bottom: 10px; }
-.ind-text { font-size: 12px; color: var(--text3); line-height: 1.6; font-style: italic; white-space: normal; margin-bottom: 14px; }
-.rat-box { padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); border-left: 3px solid var(--accent); }
-.rat-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.rat-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; }
+/* Overview */
+.gate-ok{display:flex;align-items:center;gap:6px;margin-bottom:14px;font-size:12px;color:var(--teal);background:rgba(29,185,128,0.07);border:1px solid rgba(29,185,128,0.2);padding:8px 12px;border-radius:var(--radius-sm);}
+.gate-fail-banner{background:rgba(224,75,74,0.1);border:1px solid rgba(224,75,74,0.25);border-radius:var(--radius);padding:12px 14px;margin-bottom:14px;font-size:12px;color:#D05858;line-height:1.7;white-space:normal;}
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.ov-field{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;}
+.ov-lbl{font-size:9px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;font-family:var(--mono);}
+.ov-val{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text);}
+.desc-text{font-size:13px;color:var(--text2);line-height:1.8;white-space:normal;word-wrap:break-word;margin-bottom:12px;}
+.ind-text{font-size:11px;color:var(--text3);line-height:1.65;font-style:italic;white-space:normal;margin-bottom:16px;padding:8px 12px;border-left:2px solid var(--border);background:var(--bg4);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+.rat-box{padding:14px 16px;background:var(--bg4);border:1px solid var(--border-accent);border-radius:var(--radius);border-left:3px solid var(--accent);}
+.rat-lbl{font-size:9px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-family:var(--mono);}
+.rat-text{font-size:13px;color:var(--text2);line-height:1.8;white-space:normal;word-wrap:break-word;}
 
 /* Scorecard */
-.composite-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-.composite-big { font-size: 36px; font-weight: 600; font-family: var(--mono); color: var(--text); }
-.metric-row { display: grid; grid-template-columns: 160px 90px 1fr; align-items: start; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border2); }
-.metric-row:last-child { border-bottom: none; }
-.metric-lbl { font-size: 12px; color: var(--text2); padding-top: 2px; }
-.metric-score-col { display: flex; align-items: center; gap: 6px; padding-top: 2px; }
-.metric-note { font-size: 11px; color: var(--text3); line-height: 1.5; white-space: normal; }
+.composite-row{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.composite-big{font-size:40px;font-weight:700;font-family:var(--mono);color:var(--text);}
+.metric-row{display:grid;grid-template-columns:170px 100px 1fr;align-items:start;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2);}
+.metric-row:last-child{border-bottom:none;}
+.metric-lbl{font-size:12px;color:var(--text2);padding-top:2px;}
+.metric-score-col{display:flex;align-items:center;gap:6px;padding-top:2px;}
+.metric-note{font-size:11px;color:var(--text3);line-height:1.5;white-space:normal;}
+
+/* Score bar */
+.sbar{display:flex;align-items:center;gap:7px;}
+.sbar-track{width:54px;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;flex-shrink:0;}
+.sbar-fill{height:100%;border-radius:3px;transition:width .3s ease;}
+.sbar-num{font-size:11px;font-weight:600;font-family:var(--mono);min-width:24px;color:var(--text);}
 
 /* Thesis */
-.thesis-block { padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid transparent; }
-.tb-bull { background: rgba(99,153,34,0.08); border-left-color: var(--green); }
-.tb-neut { background: rgba(24,95,165,0.08); border-left-color: var(--blue); }
-.tb-bear { background: rgba(226,75,74,0.08); border-left-color: var(--red); }
-.thesis-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.tl-bull { color: var(--green); }
-.tl-neut { color: #5B9BD5; }
-.tl-bear { color: var(--red); }
-.thesis-text { font-size: 13px; color: var(--text2); line-height: 1.75; white-space: normal; word-wrap: break-word; }
+.thesis-block{padding:14px 16px;margin-bottom:10px;border-radius:var(--radius-sm);border-left:3px solid transparent;}
+.tb-bull{background:rgba(90,170,26,0.07);border-left-color:var(--green);}
+.tb-neut{background:rgba(40,120,204,0.07);border-left-color:var(--blue);}
+.tb-bear{background:rgba(224,75,74,0.07);border-left-color:var(--red);}
+.thesis-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-family:var(--mono);}
+.tl-bull{color:var(--green);}
+.tl-neut{color:var(--blue);}
+.tl-bear{color:var(--red);}
+.thesis-text{font-size:13px;color:var(--text2);line-height:1.8;white-space:normal;word-wrap:break-word;}
 
 /* News */
-.news-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.news-header-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
-.news-item { padding: 12px 0; border-bottom: 1px solid var(--border2); }
-.news-item:last-child { border-bottom: none; }
-.news-link { display: block; text-decoration: none; margin-bottom: 5px; }
-.news-link:hover .news-hl { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(127,119,221,0.4); }
-.news-hl { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; white-space: normal; transition: color .15s; }
-.news-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 5px; flex-wrap: wrap; }
-.news-source { font-weight: 500; color: var(--text2); }
-.news-date { color: var(--text3); }
-.news-sum { font-size: 12px; color: var(--text2); line-height: 1.5; white-space: normal; word-wrap: break-word; }
-
-/* Score bar inline */
-.sbar { display: flex; align-items: center; gap: 6px; }
-.sbar-track { width: 50px; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
-.sbar-fill { height: 100%; border-radius: 2px; }
+.news-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.news-header-lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);}
+.news-item{padding:12px 0;border-bottom:1px solid var(--border2);}
+.news-item:last-child{border-bottom:none;}
+.news-link{display:block;text-decoration:none;margin-bottom:5px;}
+.news-link:hover .news-hl{color:var(--accent);}
+.news-hl{font-size:13px;font-weight:500;color:var(--text);line-height:1.45;white-space:normal;transition:color .15s;}
+.news-meta{display:flex;align-items:center;gap:6px;font-size:11px;margin-top:5px;flex-wrap:wrap;}
+.news-source{font-weight:500;color:var(--text2);}
+.news-date{color:var(--text3);font-family:var(--mono);}
 
 /* Footer */
-.site-footer { padding: 20px 24px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); line-height: 1.6; }
+.site-footer{padding:24px 24px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);line-height:1.7;font-family:var(--mono);letter-spacing:.01em;}
 
-@media (max-width: 700px) {
-  .ov-grid { grid-template-columns: 1fr 1fr; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .method-bar { display: none; }
+/* Mcap tooltip note */
+.mcap-note{font-size:9px;color:var(--text3);font-style:italic;margin-left:4px;}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .desktop-table{display:none;}
+  .mobile-list{display:block;}
+  .stats-row{grid-template-columns:1fr 1fr;gap:8px;padding:16px 16px 0;}
+  .method-bar{display:none;}
+  .controls{padding:12px 16px 12px;gap:6px;}
+  .table-wrap{padding:0 16px 40px;}
+  .site-header{padding:14px 16px;}
+  .site-title{font-size:13px;}
+  .ov-grid{grid-template-columns:1fr 1fr;}
+  .metric-row{grid-template-columns:1fr 80px;gap:8px;}
+  .metric-note{display:none;}
+  .exp-content{padding:16px 14px;}
+  .site-footer{padding:20px 16px;}
+  .result-count{display:none;}
 }
+@media (max-width: 480px) {
+  .stats-row{grid-template-columns:1fr 1fr;gap:6px;padding:12px 12px 0;}
+  .controls{padding:10px 12px 10px;}
+  .mobile-list{padding:0 12px 32px;}
+  .exp-content{padding:14px 12px;}
+}
+
+/* ---- GATE FAIL IMPROVEMENTS ---- */
+.gf-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.gf-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.gf-icon-1{background:rgba(224,75,74,0.15);color:#E04B4A;}
+.gf-icon-3{background:rgba(240,160,48,0.15);color:#F0A030;}
+.gf-icon-4{background:rgba(127,119,221,0.15);color:#7F77DD;}
+.gf-icon-5{background:rgba(126,125,138,0.15);color:#888780;}
+.gf-meta{flex:1;}
+.gf-gate-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:3px;}
+.gf-gate-1{color:#E04B4A;}
+.gf-gate-3{color:#F0A030;}
+.gf-gate-4{color:#7F77DD;}
+.gf-gate-5{color:#888780;}
+.gf-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.gf-reason{font-size:12px;color:var(--text2);line-height:1.7;white-space:normal;margin-bottom:14px;}
+.gf-risk-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg4);border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:14px;}
+.gf-risk-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);font-family:var(--mono);flex-shrink:0;}
+.gf-risk-dots{display:flex;gap:4px;}
+.gf-dot{width:10px;height:10px;border-radius:50%;background:var(--border);}
+.gf-dot.on-1{background:#E04B4A;}
+.gf-dot.on-2{background:#F0A030;}
+.gf-dot.on-3{background:#7F77DD;}
+.gf-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;white-space:normal;padding:10px 12px;background:rgba(224,75,74,0.06);border:1px solid rgba(224,75,74,0.15);border-radius:var(--radius-sm);margin-bottom:14px;}
+.gf-still-interesting{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);margin-bottom:8px;}
+/* Mobile tier-sep for fail */
+.tier-sep-fail td{background:rgba(224,75,74,0.06)!important;color:#D05858!important;border-top:1px solid rgba(224,75,74,0.2)!important;}
+/* Gate pill on mobile card */
+.gate-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;border-radius:20px;font-family:var(--mono);font-weight:700;letter-spacing:.04em;margin-top:3px;}
+.gp-1{background:rgba(224,75,74,0.15);color:#E04B4A;border:1px solid rgba(224,75,74,0.3);}
+.gp-3{background:rgba(240,160,48,0.15);color:#F0A030;border:1px solid rgba(240,160,48,0.3);}
+.gp-4{background:rgba(127,119,221,0.15);color:#9F97F0;border:1px solid rgba(127,119,221,0.3);}
+.gp-5{background:rgba(126,125,138,0.15);color:#888780;border:1px solid rgba(126,125,138,0.3);}
 </style>
 </head>
 <body>
+<div class="page-wrap">
 
 <header class="site-header">
-  <div>
-    <div class="site-title">Hiive50 Private Market Rankings</div>
-    <div class="site-sub">Two-stage investment model · 50 companies · May 2026</div>
+  <div class="header-left">
+    <div class="logo-mark">H50</div>
+    <div>
+      <div class="site-title">Hiive50 Private Market Rankings</div>
+      <div class="site-sub">Two-stage model · 50 companies · May 2026</div>
+    </div>
   </div>
   <div class="disclaimer">Not investment advice</div>
 </header>
@@ -191,16 +307,16 @@ tr.tier-sep td { background: var(--bg2); font-size: 10px; font-weight: 600; colo
 
 <div class="controls">
   <label>Tier:</label>
-  <select id="fTier" onchange="applyFilters()">
+  <select class="ctrl-select" id="fTier" onchange="applyFilters()">
     <option value="">All tiers</option>
     <option value="S">S — Strong buy</option>
     <option value="A">A — Buy</option>
     <option value="B">B — Watch</option>
     <option value="C">C — Pass</option>
-    <option value="FAIL">Gate fail</option>
+    <option value="SELL">Sell — gate fail</option>
   </select>
   <label>Sector:</label>
-  <select id="fSect" onchange="applyFilters()">
+  <select class="ctrl-select" id="fSect" onchange="applyFilters()">
     <option value="">All sectors</option>
     <option value="AI/ML">AI / ML</option>
     <option value="Defense">Defense tech</option>
@@ -212,10 +328,11 @@ tr.tier-sep td { background: var(--bg2); font-size: 10px; font-weight: 600; colo
     <option value="Other">Other</option>
   </select>
   <label>Sort:</label>
-  <select id="fSort" onchange="applyFilters()">
+  <select class="ctrl-select" id="fSort" onchange="applyFilters()">
     <option value="score">Composite score</option>
     <option value="trend">3M trend</option>
     <option value="price">Hiive price</option>
+    <option value="mcap">Impl. mkt cap</option>
     <option value="rg">Revenue growth</option>
     <option value="ve">Valuation entry</option>
     <option value="mo">Moat</option>
@@ -224,20 +341,102 @@ tr.tier-sep td { background: var(--bg2); font-size: 10px; font-weight: 600; colo
 </div>
 
 <div class="table-wrap">
-<table>
-<colgroup><col><col><col><col><col><col><col><col></colgroup>
+<!-- Desktop table -->
+<table class="desktop-table">
+<colgroup><col><col><col><col><col><col><col><col><col></colgroup>
 <thead><tr>
-  <th>#</th><th>Company</th><th>Sector</th><th>Hiive price</th><th>3M trend</th><th>Score</th><th>Tier</th><th></th>
+  <th>#</th>
+  <th>Company</th>
+  <th>Sector</th>
+  <th>Hiive price</th>
+  <th>Impl. mkt cap</th>
+  <th>3M trend</th>
+  <th>Score</th>
+  <th>Tier</th>
+  <th></th>
 </tr></thead>
 <tbody id="tBody"></tbody>
 </table>
+
+<!-- Mobile card list -->
+<div class="mobile-list" id="mobileList"></div>
 </div>
 
 <footer class="site-footer">
-  Scores: revenue growth 20% · gross margin 18% · NRR/retention 17% · valuation entry 15% · moat/defensibility 15% · burn efficiency 10% · exit path clarity 5%. Companies failing Stage 1 binary gates (regulatory viability, customer concentration, burn runway, revenue reality, exit path) are eliminated before scoring. Data sources: Hiive50 platform (May 2026), Sacra, Morningstar/PitchBook framework, Augment Power 20 Q1 2026, Setter 30 Q1 2026, public funding announcements. All scores are analyst estimates based on available public information — private company financials are not fully disclosed. Not investment advice. For informational and educational purposes only.
+  Scores: revenue growth 20% · gross margin 18% · NRR/retention 17% · valuation entry 15% · moat/defensibility 15% · burn efficiency 10% · exit path clarity 5%. Companies failing Stage 1 binary gates are eliminated before scoring. Implied market cap = Hiive secondary price × estimated shares outstanding derived from last known primary round valuation ÷ price per share — estimates only, not verified. Data sources: Hiive50 platform (May 2026), Sacra, Morningstar/PitchBook framework, public funding announcements. All scores are analyst estimates. Private company financials are not fully disclosed. Not investment advice. For informational and educational purposes only.
 </footer>
 
+</div><!-- .page-wrap -->
 <script>
+// Estimated shares outstanding (millions) derived from last known primary round
+// val / price_per_primary_share = shares, then Hiive price × shares = implied mcap
+// Where we have precise data from primary rounds we use it; otherwise we estimate
+// from the valuation range and typical dilution structure.
+const SHARES={
+  "databricks":613,     // $134B val / ~$218 Hiive price implied ~613M shares
+  "anthropic":262,      // $380B / ~$1450 implied ~262M
+  "shield-ai":84,       // $12.7B / ~$151 = ~84M
+  "spacex":2295,        // $1.75T IPO target / $762 = ~2295M
+  "kalshi":38,          // $22B / $580 = ~38M
+  "cerebras":325,       // $48.8B / $150 = ~325M FD
+  "stripe":2237,        // $159B / $71 = ~2237M
+  "kraken":866,         // ~$30B est val / $34.74 = ~866M
+  "scale-ai":190,       // ~$3B val / $15.75 = ~190M
+  "lightmatter":70,     // ~$8B val / $118 = ~68M
+  "crusoe":51,          // $10B / ~$198 = ~51M
+  "huntress":125,       // ~$1.75B / $13.93 = ~126M
+  "dragos":68,          // ~$1.7B / $24.93 = ~68M
+  "cohere":22,          // ~$5B / $226 = ~22M
+  "perplexity":333,     // $21.2B / $63.41 = ~334M
+  "groq":81,            // $2.8B / $34.28 = ~82M
+  "psiquantum":91,      // $3.15B / $34.50 = ~91M
+  "figure-ai":48,       // ~$6.75B / $140 = ~48M
+  "apptronik":55,       // ~$3B est / $54 = ~55M
+  "gecko":28,           // $1.25B / $44.77 = ~28M
+  "sambanova":191,      // $5B / $26.16 = ~191M
+  "lambda":31,          // $1.5B / $48.44 = ~31M
+  "ripple":776,         // ~$96B mkt cap XRP-based / but private co est ~$10B / $123 = ~81M
+  "varda":53,           // ~$1.6B est / $29.74 = ~54M
+  "glean":108,          // $4.6B / $42.49 = ~108M
+  "polymarket":125,     // ~$19B / $152 = ~125M
+  "sandboxaq":275,      // $5.75B / $20.88 = ~275M
+  "commure":82,         // ~$2.6B est / $31.37 = ~83M
+  "synchron":62,        // ~$2.2B est / $34.83 = ~63M
+  "zipline":87,         // ~$5B est / $57.67 = ~87M
+  "verkada":292,        // $3.2B / $10.95 = ~292M
+  "postman":711,        // $5.6B / $7.89 = ~711M
+  "mercury":168,        // ~$2.8B est / $16.57 = ~169M
+  "addepar":1255,       // $3.25B / $2.59 = ~1255M
+  "consensys":243,      // $7B / $28.80 = ~243M
+  "dataminr":506,       // $4.1B / $8.10 = ~506M
+  "replit":5,           // $1.16B / $229 = ~5M
+  "skydio":348,         // $2.2B / $6.32 = ~348M
+  "divergent":38,       // $1.2B / $31.78 = ~38M
+  "lyten":80,           // ~$750M est / $9.34 = ~80M
+  "field-ai":35,        // est ~$1.4B / $38.83 = ~36M
+  "epic-games":527,     // ~$125B est FD / $238 = ~525M
+  "farmer-dog":69,      // $1.4B / $20.24 = ~69M
+  "redwood":139,        // $5B / $36.99 = ~135M
+  "whatnot":11,         // $3.7B / $348 = ~11M
+  "1x":5,               // ~$1.1B est / $218 = ~5M
+  "uphold":296,         // est ~$480M / $1.62 = ~296M
+  "onebrief":12,        // est ~$300M / $25.78 = ~12M
+  "thrive":83,          // est ~$1.24B / $14.95 = ~83M
+  "reflection":65       // $20B / $310 = ~65M
+};
+
+function fmtMcap(m){
+  if(m===null||m===undefined)return'—';
+  if(m>=1000)return'$'+(m/1000).toFixed(1)+'T';
+  if(m>=1)return'$'+m.toFixed(1)+'B';
+  return'$'+(m*1000).toFixed(0)+'M';
+}
+function implMcap(c){
+  const sh=SHARES[c.id];
+  if(!sh)return null;
+  return (c.price*sh)/1000; // billions
+}
+
 const C=[
 {id:"databricks",n:"Databricks",sect:"AI/ML",price:218.91,trend:11.9,bid:321,ask:null,gp:true,gfr:"",
 sc:{rg:9.5,gm:9.0,nr:9.5,ve:8.5,mo:9.0,be:9.5,ep:8.5},
@@ -916,11 +1115,14 @@ news:[
 ]},
 // GATE FAILURES
 {id:"1x",n:"1X (US HoldCo)",sect:"Robotics",price:218.33,trend:-67.3,bid:450,ask:278,gp:false,
+sc:{rg:5.0,gm:4.0,nr:4.5,ve:2.0,mo:5.5,be:1.5,ep:2.0},
 gfr:"Fails Gate 3 — Burn runway: the -67.3% three-month secondary price collapse is the worst in the entire Hiive50 by a very large margin. This level of derating almost always reflects severe capital pressure or a major business setback. The extreme bid-ask spread of $450 bid versus $278 ask indicates a dysfunctional secondary market.",
 desc:"1X builds humanoid robots including the NEO home robot powered by its Redwood AI model trained on real-world household task data. It operates its own manufacturing facility in Norway with ambitious production targets of tens of thousands of units in 2026.",
 ind:"Humanoid robotics — competes with Figure AI, Tesla Optimus, and Apptronik.",
-rat:"1X fails the burn runway gate. The -67.3% three-month secondary collapse — the worst in the Hiive50 — combined with a dysfunctional $450/$278 bid-ask spread are the strongest possible warning signals in a private secondary market.",
-bull:"",neut:"",bear:"",
+rat:"1X receives a Sell rating and fails Stage 1 on the burn runway gate. The -67.3% three-month secondary collapse — by far the worst in the entire Hiive50 — combined with a dysfunctional $450 bid versus $278 ask spread are the strongest possible distress signals in a private secondary market. This spread implies buyers and sellers cannot agree on fair value, which typically reflects an emergency capital raise, a major operational setback, or both. Even if the underlying humanoid robotics technology has merit, capital structure distress must be resolved before any investment thesis is viable.",
+bull:"1X successfully closes an emergency capital round that stabilizes the burn rate. NEO home robot achieves early-adopter commercial traction, validating the product thesis. The secondary price stabilizes and the bid-ask spread normalizes.",
+neut:"1X receives a bridge round that extends runway 12-18 months. The company pivots from consumer to industrial use cases to reduce burn. Secondary price partially recovers but remains well below peak.",
+bear:"1X fails to close new financing within 90 days. Manufacturing operations in Norway are suspended. Secondary market price collapses toward zero as a distressed wind-down or fire-sale acquisition becomes likely.",
 news:[
 {h:"1X secondary price -67.3% — worst three-month decline in entire Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/1x-stock"},
 {h:"1X NEO humanoid robot targets home deployment at tens of thousands of units in 2026",s:"Contrary Research",d:"2025",u:"https://research.contrary.com/company/1x"},
@@ -929,11 +1131,14 @@ news:[
 {h:"Understanding secondary market distress signals",s:"Hiive",d:"2025",u:"https://www.hiive.com/market-insights"}
 ]},
 {id:"uphold",n:"Uphold",sect:"Crypto",price:1.62,trend:-44.9,bid:1,ask:2,gp:false,
+sc:{rg:3.5,gm:4.5,nr:3.0,ve:3.0,mo:3.5,be:3.5,ep:2.0},
 gfr:"Fails Gate 1 — Regulatory viability: Uphold faces ongoing regulatory actions and delisting risks creating existential business uncertainty. The -44.9% three-month secondary decline and $1.62 share price reflect a business under severe stress.",
 desc:"Uphold is a multi-asset digital trading platform allowing users to trade between cryptocurrencies, fiat currencies, precious metals, and equities.",
 ind:"Crypto trading platform — competes with Coinbase, Kraken, and other regulated exchanges.",
-rat:"Uphold fails Stage 1 on regulatory viability. A -44.9% three-month decline combined with a price near $1.62 and regulatory pressure signals fundamental business distress.",
-bull:"",neut:"",bear:"",
+rat:"Uphold receives a Sell rating and fails Stage 1 on the regulatory viability gate. Regulatory actions against a crypto exchange can move from investigation to business suspension faster than any other risk category — Uphold's -44.9% three-month secondary decline reflects the market pricing in meaningful probability of operational impairment. At $1.62 per share, the implied market cap is already deeply discounted, but a forced wind-down would make even this price a poor entry. Regulated alternatives like Kraken and Coinbase offer superior risk-adjusted exposure to the same crypto exchange thesis without the existential regulatory overhang.",
+bull:"Uphold resolves regulatory actions through settlements with no material operational restrictions. The $1.62 price reflects maximum pessimism and the stock recovers significantly as compliance concerns fade.",
+neut:"Regulatory actions result in fines and operational restrictions in certain jurisdictions. Uphold survives but loses significant market share to compliant competitors. Secondary price remains depressed.",
+bear:"Regulatory action escalates to forced business suspension or license revocation in key markets. The company cannot operate its core exchange functions and secondary price falls toward zero.",
 news:[
 {h:"Uphold -44.9% three-month secondary — second-worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/uphold-stock"},
 {h:"Uphold faces regulatory scrutiny across multiple jurisdictions",s:"CoinDesk",d:"2024-2025",u:"https://www.coindesk.com"},
@@ -942,11 +1147,14 @@ news:[
 {h:"Uphold product and service overview",s:"Uphold",d:"2026",u:"https://uphold.com"}
 ]},
 {id:"onebrief",n:"Onebrief",sect:"Defense",price:25.78,trend:-66.4,bid:null,ask:31,gp:false,
+sc:{rg:4.0,gm:5.0,nr:4.5,ve:4.5,mo:5.5,be:3.0,ep:3.5},
 gfr:"Fails Gate 3 — Burn runway: the -66.4% three-month secondary collapse is the second-worst in the Hiive50. Combined with pre-commercial revenue status and no active bids on the secondary market, this represents a high-risk situation.",
 desc:"Onebrief is a military planning software platform that modernizes how armed forces create and share operational plans, replacing legacy tools in defense headquarters with collaborative, real-time planning software.",
 ind:"Defense planning software — niche but strategically important within military command and control technology.",
-rat:"Onebrief fails Stage 1 gates due to a -66.4% three-month secondary collapse and insufficient verified commercial revenue at scale. The absence of any active bids on Hiive compounds the risk.",
-bull:"",neut:"",bear:"",
+rat:"Onebrief receives a Sell rating and fails Stage 1 on the burn runway gate. A -66.4% secondary price collapse with zero active bids on Hiive is a critical illiquidity warning — there is no buyer willing to establish a floor price. Defense software companies are particularly vulnerable to this dynamic because government contract award timelines can slip 12-24 months with no revenue bridge. The absence of verifiable commercial revenue at scale means investors are funding a pre-revenue defense startup at a valuation that assumes contract wins that have not yet materialized. Peers like Shield AI demonstrate what a funded, revenue-generating defense software business looks like — Onebrief is not there.",
+bull:"Onebrief wins a significant DoD program of record that validates the planning software category. A strategic acquirer such as Palantir or a traditional defense prime pays a premium to acquire the platform and its government relationships.",
+neut:"Onebrief closes a bridge round that extends runway 18 months. Revenue grows slowly as government procurement cycles normalize. Exit via acquisition at a modest premium in 3-5 years.",
+bear:"Government contract timelines extend further and Onebrief cannot bridge to revenue. The company conducts a distressed fundraise at a severe down-round or accepts an acquisition at a price below the current secondary level.",
 news:[
 {h:"Onebrief -66.4% three-month secondary — second-worst decline in Hiive50",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/onebrief-stock"},
 {h:"Onebrief military planning software: modernizing operational planning",s:"Onebrief",d:"2024-2025",u:"https://onebrief.com"},
@@ -955,11 +1163,14 @@ news:[
 {h:"Reading secondary market signals for early-stage defense tech",s:"Hiive",d:"2025",u:"https://www.hiive.com/market-insights"}
 ]},
 {id:"thrive",n:"Thrive Market",sect:"Other",price:14.95,trend:-33.0,bid:null,ask:10,gp:false,
+sc:{rg:4.5,gm:5.0,nr:5.5,ve:4.0,mo:4.0,be:5.0,ep:2.5},
 gfr:"Fails Gate 5 — Exit path: -33% three-month secondary decline with no active bids and an ask of only $10 against a $14.95 market price signals no credible near-term exit path. The business faces structural competitive headwinds from Amazon and Whole Foods.",
 desc:"Thrive Market is an online membership-based marketplace for organic and natural products, offering members discounted pricing on health-focused food, supplements, and household products.",
 ind:"Online organic grocery and wellness marketplace — competes with Amazon Fresh, Whole Foods, and specialty organic retailers.",
-rat:"Thrive Market fails Stage 1 on the exit path gate. Its -33% three-month secondary decline with no active bids and a $10 ask below the $14.95 market price indicates the secondary market views this as a distressed situation.",
-bull:"",neut:"",bear:"",
+rat:"Thrive Market receives a Sell rating and fails Stage 1 on the exit path gate. The most important signal here is not the -33% trend but the ask price of $10 against a $14.95 last-traded price — sellers are willing to take a 33% haircut to the last known market price just to exit. That implies the sellers who know the business best are actively fleeing. Amazon Prime and Whole Foods represent a structural competitive moat that Thrive cannot overcome: Amazon can offer organic groceries to 200 million Prime members at lower prices with faster delivery and no membership fee. There is no visible M&A interest, no IPO preparation, and no new strategic narrative that would create a liquidity event.",
+bull:"Thrive's loyal subscriber base and strong NRR attract acquisition interest from a strategic buyer such as Walmart, Target, or a major CPG company seeking direct DTC organic distribution. Acquisition price exceeds the current secondary level.",
+neut:"Thrive maintains its subscriber base but growth stalls. A private equity buyout occurs at a modest premium to the current secondary ask, delivering minimal returns to existing secondary holders.",
+bear:"Amazon and Whole Foods intensify organic grocery competition. Thrive's subscriber growth reverses. The company is acquired in a distressed transaction at or below the $10 ask price currently visible on the secondary market.",
 news:[
 {h:"Thrive Market -33% three-month secondary — no active bids, $10 ask below market",s:"Hiive",d:"May 2026",u:"https://www.hiive.com/securities/thrive-market-stock"},
 {h:"Thrive Market faces structural competition from Amazon and Whole Foods",s:"Thrive Market",d:"2024-2025",u:"https://thrivemarket.com"},
@@ -968,11 +1179,14 @@ news:[
 {h:"DTC organic grocery: market challenges in 2026",s:"Thrive Market",d:"2025-2026",u:"https://thrivemarket.com"}
 ]},
 {id:"reflection",n:"Reflection AI",sect:"AI/ML",price:309.99,trend:23.6,bid:400,ask:null,gp:false,
+sc:{rg:2.0,gm:5.0,nr:2.5,ve:1.5,mo:6.5,be:3.0,ep:3.5},
 gfr:"Fails Gate 4 — Revenue reality: Reflection AI has raised $4.5B+ at a $20B+ valuation but has not publicly released any product, model, or verifiable commercial revenue as of May 2026. Its coding agent Asimov remains on a waitlist and its flagship open-weight model has not been released. Paying $310/share means paying over $20B for zero verified revenue.",
 desc:"Reflection AI is building open-source frontier AI models founded by two DeepMind researchers. It has raised $4.5B+ from Nvidia, Sequoia, and JPMorgan at a $20B+ valuation but has not yet publicly released any model or product as of May 2026.",
 ind:"Foundation AI models — plans to compete with Meta Llama and Mistral in open-source AI with frontier-quality open-weight models.",
-rat:"Reflection AI fails Stage 1 on the revenue reality gate — it has raised over $4B at a $20B valuation without shipping a single public product. The secondary price of $309.99 represents pure speculative premium with no business fundamentals to anchor it.",
-bull:"",neut:"",bear:"",
+rat:"Reflection AI receives a Sell rating and fails Stage 1 on the revenue reality gate. The +23.6% three-month secondary trend is the most dangerous signal in the Hiive50 — it shows the market is still buying despite zero shipped product. This is a pure momentum trade on founder pedigree and investor logos, not business fundamentals. At $20B valuation with no revenue, investors are being asked to pay a higher ARR multiple than Databricks — a profitable company with $5.4B in revenue — for a company that has not shipped a single line of code to a paying customer. The two DeepMind founders may be exceptional researchers, but the AI model market has compressed dramatically: Meta's Llama is free, Anthropic and OpenAI have 18-month head starts on enterprise distribution. The path to $20B in justified value is extremely narrow.",
+bull:"Reflection ships its flagship open-weight model in H2 2026 and it achieves benchmark performance competitive with frontier models. Asimov coding agent attracts enterprise customers. The secondary price's +23.6% trend proves prescient.",
+neut:"Reflection ships products but they underperform frontier models from Anthropic and OpenAI. Revenue grows but justifying the $20B valuation requires execution that proves difficult against entrenched competitors.",
+bear:"Products ship late or underperform expectations. Enterprise customers choose Anthropic or OpenAI for reliability and support. Nvidia and Sequoia mark down the valuation. Secondary price collapses as momentum reverses.",
 news:[
 {h:"Reflection AI seeking $2.5B at $20B+ — no products shipped as of March 2026",s:"Turing Post",d:"Mar 2026",u:"https://www.turingpost.com/p/reflectionai"},
 {h:"Reflection AI raises $2B at $8B valuation led by Nvidia",s:"Seeking Alpha",d:"Oct 2025",u:"https://seekingalpha.com/news/4569167-nvidia-backed-startup-reflection-builder-of-open-source-ai-models-seeks-2_5b-in-latest-round"},
@@ -983,32 +1197,113 @@ news:[
 ];
 
 function w(s){if(!s)return 0;return+(s.rg*.20+s.gm*.18+s.nr*.17+s.ve*.15+s.mo*.15+s.be*.10+s.ep*.05).toFixed(2);}
-function tier(c){if(!c.gp)return'FAIL';const t=w(c.sc);if(t>=8.5)return'S';if(t>=7.0)return'A';if(t>=5.5)return'B';return'C';}
-function tcls(t){if(t==='S')return'bs';if(t==='A')return'ba';if(t==='B')return'bb';if(t==='C')return'bc';return'bf';}
+function tier(c){if(!c.gp)return'SELL';const t=w(c.sc);if(t>=8.5)return'S';if(t>=7.0)return'A';if(t>=5.5)return'B';return'C';}
+function tcls(t){if(t==='S')return'bs';if(t==='A')return'ba';if(t==='B')return'bb';if(t==='C')return'bc';if(t==='SELL')return'bsell';return'bf';}
+function trow(t){if(t==='S')return'tier-s';if(t==='A')return'tier-a';if(t==='B')return'tier-b';if(t==='SELL')return'tier-sell';return'';}
 function fmt(v){if(v==null)return'—';return'$'+(v>=1000?v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):v.toFixed(2));}
 function tr(v){const s=v>=0?'+':'';const cl=v>1?'trend-pos':v<-1?'trend-neg':'trend-flat';return`<span class="${cl}">${s}${v.toFixed(1)}%</span>`;}
-function sbar(v){const pct=Math.round(v*10);let col=v>=8?'#639922':v>=6.5?'#185FA5':v>=5?'#EF9F27':'#E24B4A';return`<div class="sbar"><div class="sbar-track"><div class="sbar-fill" style="width:${pct}%;background:${col}"></div></div><span style="font-size:11px;font-weight:500;font-family:var(--mono);min-width:24px">${v.toFixed(1)}</span></div>`;}
+function sbar(v){const pct=Math.round(v*10);let col=v>=8?'#5AAA1A':v>=6.5?'#2878CC':v>=5?'#F0A030':'#E04B4A';return`<div class="sbar"><div class="sbar-track"><div class="sbar-fill" style="width:${pct}%;background:${col}"></div></div><span class="sbar-num">${v.toFixed(1)}</span></div>`;}
 
 let expanded=null;
+const GATE_INFO={
+  "1x":        {gate:3,name:"Burn runway",risk:3},
+  "uphold":    {gate:1,name:"Regulatory viability",risk:3},
+  "onebrief":  {gate:3,name:"Burn runway",risk:3},
+  "thrive":    {gate:5,name:"Exit path clarity",risk:2},
+  "reflection":{gate:4,name:"Revenue reality",risk:2}
+};
+const GATE_DESCS={
+  1:"Regulatory viability — the business faces active regulatory pressure or legal uncertainty that could impair or eliminate its core operations.",
+  3:"Burn runway — secondary market pricing signals severe capital stress. A collapse of this magnitude almost always indicates the company is burning cash at a rate that threatens its operating timeline.",
+  4:"Revenue reality — the company has raised at a significant valuation but has not yet demonstrated verifiable commercial revenue at scale. The secondary price reflects pure speculation.",
+  5:"Exit path clarity — no credible near-term liquidity event is visible. The secondary market shows structural selling pressure with no institutional buyers establishing a floor."
+};
+const RISK_LABELS={1:"Elevated risk",2:"High risk",3:"Extreme risk"};
+const GATE_ICONS={1:"ti-shield-x",3:"ti-flame",4:"ti-chart-line-off",5:"ti-door-off"};
+
+function buildGateFail(c){
+  const gi=GATE_INFO[c.id]||{gate:1,name:"Gate fail",risk:3};
+  const gn=gi.gate;const risk=gi.risk;
+  const dotCls=`gf-icon-${gn}`;const gateCls=`gf-gate-${gn}`;const pillCls=`gp-${gn}`;
+  const icon=GATE_ICONS[gn]||"ti-alert-circle";
+  const dots=Array.from({length:3},(_,i)=>`<div class="gf-dot${i<risk?` on-${risk>2?1:risk>1?2:3}`:""}"></div>`).join("");
+  const mc=implMcap(c);
+  const mkt=`<div class="ov-grid" style="margin-bottom:14px">
+    <div class="ov-field"><div class="ov-lbl">Hiive price</div><div class="ov-val">${fmt(c.price)}</div></div>
+    <div class="ov-field"><div class="ov-lbl">Impl. mkt cap</div><div class="ov-val">${mc!==null?fmtMcap(mc):"—"}</div></div>
+    <div class="ov-field"><div class="ov-lbl">3M trend</div><div class="ov-val">${tr(c.trend)}</div></div>
+    <div class="ov-field"><div class="ov-lbl">Bid / Ask</div><div class="ov-val" style="font-size:12px">${fmt(c.bid)} / ${fmt(c.ask)}</div></div>
+  </div>`;
+  return`
+    <div class="gf-header">
+      <div class="gf-icon ${dotCls}"><i class="ti ${icon}"></i></div>
+      <div class="gf-meta">
+        <div class="gf-gate-label ${gateCls}">Stage 1 gate ${gn} failure · ${gi.name}</div>
+        <div class="gf-title">Eliminated before scoring</div>
+      </div>
+    </div>
+    <div class="gf-risk-bar">
+      <span class="gf-risk-label">Risk level</span>
+      <div class="gf-risk-dots">${dots}</div>
+      <span style="font-size:11px;font-weight:600;color:${risk===3?'#E04B4A':risk===2?'#F0A030':'#888780'};font-family:var(--mono)">${RISK_LABELS[risk]||"High risk"}</span>
+    </div>
+    <p class="gf-reason"><strong style="color:var(--text)">Gate ${gn} — ${gi.name}:</strong> ${GATE_DESCS[gn]||""}</p>
+    <div class="gf-disclaimer"><i class="ti ti-alert-triangle" style="font-size:12px;vertical-align:-1px;margin-right:5px;color:#E04B4A"></i><strong style="color:var(--text2)">Specific failure:</strong> ${c.gfr}</div>
+    ${mkt}
+    <div class="gf-still-interesting">About the company</div>
+    <p class="desc-text">${c.desc}</p>
+    <p class="ind-text">${c.ind}</p>
+    <div class="rat-box" style="border-left-color:#E04B4A;border-color:rgba(224,75,74,0.3)"><div class="rat-lbl" style="color:#E04B4A">Sell recommendation — why we rate this a sell</div><p class="rat-text">${c.rat}</p></div>`;
+}
+
 function buildOv(c){
-  const gate=c.gp?`<div class="gate-ok"><i class="ti ti-circle-check" style="font-size:16px"></i> Passed all 5 stage-1 binary gates</div>`:`<div class="gate-fail-banner"><i class="ti ti-alert-circle" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i><strong>Gate fail:</strong> ${c.gfr}</div>`;
-  const mkt=`<div class="ov-grid"><div class="ov-field"><div class="ov-lbl">Hiive price</div><div class="ov-val">${fmt(c.price)}</div></div><div class="ov-field"><div class="ov-lbl">3M trend</div><div class="ov-val">${tr(c.trend)}</div></div><div class="ov-field"><div class="ov-lbl">Highest bid</div><div class="ov-val">${fmt(c.bid)}</div></div><div class="ov-field"><div class="ov-lbl">Lowest ask</div><div class="ov-val">${fmt(c.ask)}</div></div></div>`;
+  if(!c.gp)return buildGateFail(c);
+  const mc=implMcap(c);
+  const gate=`<div class="gate-ok"><i class="ti ti-circle-check" style="font-size:15px"></i> Passed all 5 stage-1 binary gates</div>`;
+  const mkt=`<div class="ov-grid">
+    <div class="ov-field"><div class="ov-lbl">Hiive price</div><div class="ov-val">${fmt(c.price)}</div></div>
+    <div class="ov-field"><div class="ov-lbl">Impl. mkt cap</div><div class="ov-val">${mc!==null?fmtMcap(mc):"—"}</div></div>
+    <div class="ov-field"><div class="ov-lbl">3M trend</div><div class="ov-val">${tr(c.trend)}</div></div>
+    <div class="ov-field"><div class="ov-lbl">Bid / Ask</div><div class="ov-val" style="font-size:12px">${fmt(c.bid)} / ${fmt(c.ask)}</div></div>
+  </div>`;
   return`${gate}${mkt}<p class="desc-text">${c.desc}</p><p class="ind-text">${c.ind}</p><div class="rat-box"><div class="rat-lbl">Why ranked here</div><p class="rat-text">${c.rat}</p></div>`;
 }
+
+function buildSellSc(c){
+  const s=c.sc;
+  const score=w(s);
+  const disclaimer=`<div style="background:rgba(224,75,74,0.08);border:1px solid rgba(224,75,74,0.2);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#D05858;line-height:1.65"><i class="ti ti-alert-triangle" style="font-size:12px;vertical-align:-1px;margin-right:5px"></i><strong>Stage 1 gate failure.</strong> These scores are provided for informational context only. This company is rated <strong>Sell</strong> — the gate failure reason takes precedence over any individual metric score.</div>`;
+  const rows=[['Revenue growth (20%)',s.rg],['Gross margin (18%)',s.gm],['NRR / retention (17%)',s.nr],['Valuation entry (15%)',s.ve],['Moat / defensibility (15%)',s.mo],['Burn efficiency (10%)',s.be],['Exit path clarity (5%)',s.ep]].map(([l,v])=>`<div class="metric-row"><span class="metric-lbl">${l}</span><div class="metric-score-col">${sbar(v)}</div></div>`).join('');
+  return`${disclaimer}<div class="composite-row"><span style="font-size:12px;color:var(--text2)">Indicative score</span><span class="composite-big" style="color:#D05858">${score.toFixed(2)}</span><span class="badge bsell">Sell</span></div>${rows}`;
+}
+
 function buildSc(c){
-  if(!c.gp)return`<p style="font-size:13px;color:var(--text2);line-height:1.6">Scoring not applicable — company eliminated at Stage 1 gate filter before reaching the weighted scoring model.</p>`;
+  if(!c.gp&&!c.sc)return`<p style="font-size:13px;color:var(--text2);line-height:1.7">Scoring not applicable — company eliminated at Stage 1 gate filter.</p>`;
+  if(!c.gp)return buildSellSc(c);
   const s=c.sc;
   const rows=[['Revenue growth (20%)',s.rg],['Gross margin (18%)',s.gm],['NRR / retention (17%)',s.nr],['Valuation entry (15%)',s.ve],['Moat / defensibility (15%)',s.mo],['Burn efficiency (10%)',s.be],['Exit path clarity (5%)',s.ep]].map(([l,v])=>`<div class="metric-row"><span class="metric-lbl">${l}</span><div class="metric-score-col">${sbar(v)}</div></div>`).join('');
-  return`<div class="composite-row"><span style="font-size:12px;color:var(--text2)">Composite score</span><span class="composite-big">${w(c.sc).toFixed(2)}</span><span class="badge ${tcls(tier(c))}">${tier(c)} tier</span></div>${rows}`;
+  return`<div class="composite-row"><span style="font-size:12px;color:var(--text2)">Composite score</span><span class="composite-big">${w(c.sc).toFixed(2)}</span><span class="badge ${tcls(tier(c))}">${tier(c)}</span></div>${rows}`;
 }
 function buildTh(c){
-  if(!c.gp||!c.bull)return`<p style="font-size:13px;color:var(--text2);line-height:1.6">Investment thesis not applicable for gate-failed companies.</p>`;
+  if(!c.bull)return`<p style="font-size:13px;color:var(--text2);line-height:1.7">Investment thesis not available.</p>`;
   return`<div class="thesis-block tb-bull"><div class="thesis-lbl tl-bull">Bull case</div><p class="thesis-text">${c.bull}</p></div><div class="thesis-block tb-neut"><div class="thesis-lbl tl-neut">Neutral case</div><p class="thesis-text">${c.neut}</p></div><div class="thesis-block tb-bear"><div class="thesis-lbl tl-bear">Bear case</div><p class="thesis-text">${c.bear}</p></div>`;
 }
 function buildNw(c){
   if(!c.news||!c.news.length)return`<p style="font-size:13px;color:var(--text2)">No citations available.</p>`;
-  const items=c.news.map(n=>`<div class="news-item"><a class="news-link" href="${n.u}" target="_blank" rel="noopener noreferrer"><div class="news-hl">${n.h} <i class="ti ti-external-link" style="font-size:11px;opacity:.5;vertical-align:1px"></i></div></a><div class="news-meta"><span class="news-source">${n.s}</span><span class="news-date">· ${n.d}</span></div><div class="news-sum">${n.sm||''}</div></div>`).join('');
-  return`<div class="news-header"><span class="news-header-lbl">${c.news.length} citation${c.news.length>1?'s':''} — click headline to open source in new tab</span></div>${items}`;
+  const items=c.news.map(n=>`<div class="news-item"><a class="news-link" href="${n.u}" target="_blank" rel="noopener noreferrer"><div class="news-hl">${n.h} <i class="ti ti-external-link" style="font-size:10px;opacity:.4;vertical-align:1px"></i></div></a><div class="news-meta"><span class="news-source">${n.s}</span><span class="news-date">· ${n.d}</span></div></div>`).join('');
+  return`<div class="news-header"><span class="news-header-lbl">${c.news.length} citation${c.news.length>1?'s':''} — tap headline to open source</span></div>${items}`;
+}
+function buildExpand(id,hasTh){
+  const thTab=hasTh?`<button class="tab-btn" id="t-${id}-th" onclick="event.stopPropagation();stab('${id}','th')">Thesis</button>`:'';
+  return`<div class="exp-inner" id="i-${id}"><div class="exp-content"><div class="tabs"><button class="tab-btn active" id="t-${id}-ov" onclick="event.stopPropagation();stab('${id}','ov')">Overview</button><button class="tab-btn" id="t-${id}-sc" onclick="event.stopPropagation();stab('${id}','sc')">Scorecard</button>${thTab}<button class="tab-btn" id="t-${id}-nw" onclick="event.stopPropagation();stab('${id}','nw')">News</button></div><div class="tab-pane active" id="p-${id}-ov"></div><div class="tab-pane" id="p-${id}-sc"></div>${hasTh?`<div class="tab-pane" id="p-${id}-th"></div>`:''}<div class="tab-pane" id="p-${id}-nw"></div></div></div>`;
+}
+// Lazy-load tab content on first open
+function loadTabContent(c){
+  const id=c.id;const hasTh=!!c.bull;
+  const ov=document.getElementById(`p-${id}-ov`);if(ov&&!ov.dataset.loaded){ov.innerHTML=buildOv(c);ov.dataset.loaded='1';}
+  const sc=document.getElementById(`p-${id}-sc`);if(sc&&!sc.dataset.loaded){sc.innerHTML=buildSc(c);sc.dataset.loaded='1';}
+  if(hasTh){const th=document.getElementById(`p-${id}-th`);if(th&&!th.dataset.loaded){th.innerHTML=buildTh(c);th.dataset.loaded='1';}}
+  const nw=document.getElementById(`p-${id}-nw`);if(nw&&!nw.dataset.loaded){nw.innerHTML=buildNw(c);nw.dataset.loaded='1';}
 }
 function stab(id,tab){
   ['ov','sc','th','nw'].forEach(t=>{
@@ -1018,61 +1313,138 @@ function stab(id,tab){
     if(b)b.classList.toggle('active',t===tab);
   });
 }
-function tog(id){
+function tog(id,c){
   const inner=document.getElementById(`i-${id}`);
-  const row=document.getElementById(`r-${id}`);
-  if(!inner||!row)return;
+  if(!inner)return;
   if(expanded&&expanded!==id){
     const pi=document.getElementById(`i-${expanded}`);
     const pr=document.getElementById(`r-${expanded}`);
     const pc=document.getElementById(`c-${expanded}`);
-    if(pi)pi.classList.remove('open');if(pr)pr.classList.remove('active');if(pc)pc.classList.remove('open');
+    const mc=document.getElementById(`mc-${expanded}`);
+    if(pi)pi.classList.remove('open');
+    if(pr)pr.classList.remove('active');
+    if(pc)pc.classList.remove('open');
+    if(mc){mc.classList.remove('active');const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.remove('open');}
   }
   const isOpen=inner.classList.contains('open');
-  inner.classList.toggle('open',!isOpen);row.classList.toggle('active',!isOpen);
+  inner.classList.toggle('open',!isOpen);
+  const dr=document.getElementById(`r-${id}`);if(dr)dr.classList.toggle('active',!isOpen);
   const ch=document.getElementById(`c-${id}`);if(ch)ch.classList.toggle('open',!isOpen);
+  const mc=document.getElementById(`mc-${id}`);
+  if(mc){mc.classList.toggle('active',!isOpen);const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.toggle('open',!isOpen);}
+  if(!isOpen&&c)loadTabContent(c);
   expanded=isOpen?null:id;
 }
+
 function applyFilters(){
   const tv=document.getElementById('fTier').value;
   const sv=document.getElementById('fSect').value;
   const sort=document.getElementById('fSort').value;
-  let data=C.map(c=>({...c,_t:tier(c),_s:w(c.sc)}));
+  let data=C.map(c=>({...c,_t:tier(c),_s:w(c.sc),_m:implMcap(c)}));
   if(tv)data=data.filter(c=>c._t===tv);
   if(sv)data=data.filter(c=>c.sect===sv);
   const passed=data.filter(c=>c.gp);const failed=data.filter(c=>!c.gp);
-  const sf=(a,b)=>{if(sort==='score')return b._s-a._s;if(sort==='trend')return b.trend-a.trend;if(sort==='price')return b.price-a.price;if(sort==='rg')return b.sc.rg-a.sc.rg;if(sort==='ve')return b.sc.ve-a.sc.ve;if(sort==='mo')return b.sc.mo-a.sc.mo;return 0;};
-  passed.sort(sf);
-  renderRows([...passed,...failed]);
-  document.getElementById('countLbl').textContent=`Showing ${passed.length+failed.length} of ${C.length} companies`;
+  const sf=(a,b)=>{
+    if(sort==='score')return b._s-a._s;
+    if(sort==='trend')return b.trend-a.trend;
+    if(sort==='price')return b.price-a.price;
+    if(sort==='mcap'){const am=a._m??-1,bm=b._m??-1;return bm-am;}
+    if(sort==='rg')return b.sc.rg-a.sc.rg;
+    if(sort==='ve')return b.sc.ve-a.sc.ve;
+    if(sort==='mo')return b.sc.mo-a.sc.mo;
+    return 0;
+  };
+  passed.sort(sf);failed.sort(sf);
+  renderAll([...passed,...failed]);
+  document.getElementById('countLbl').textContent=`Showing ${passed.length+failed.length} of ${C.length}`;
 }
-function renderRows(data){
+
+const TL={S:'S tier — strong buy',A:'A tier — buy',B:'B tier — watch',C:'C tier — pass',SELL:'Sell — failed stage 1 gates'};
+
+function renderAll(data){
+  renderDesktop(data);
+  renderMobile(data);
+}
+
+function renderDesktop(data){
   const tbody=document.getElementById('tBody');tbody.innerHTML='';
   let rank=0,lastTier=null;
-  const tl={S:'S tier — strong buy',A:'A tier — buy',B:'B tier — watch',C:'C tier — pass / hold',FAIL:'Failed stage 1 binary gates'};
   data.forEach(c=>{
-    const t=tier(c);const score=w(c.sc);
-    if(t!==lastTier){const sep=document.createElement('tr');sep.className='tier-sep';sep.innerHTML=`<td colspan="8">${tl[t]}</td>`;tbody.appendChild(sep);lastTier=t;}
-    if(c.gp)rank++;
-    const hasTh=c.gp&&c.bull;
-    const dr=document.createElement('tr');dr.className='data-row';dr.id=`r-${c.id}`;dr.onclick=()=>tog(c.id);
-    dr.innerHTML=`<td style="text-align:right;color:var(--text3);font-size:11px;font-family:var(--mono)">${c.gp?rank:'—'}</td><td><div class="cname">${c.n}</div><div class="csect">${c.sect}</div></td><td><span class="csect">${c.sect}</span></td><td class="price-val">${fmt(c.price)}</td><td>${tr(c.trend)}</td><td>${c.gp?`<span class="score-val">${score.toFixed(2)}</span>`:'<span style="font-size:11px;color:var(--text3)">n/a</span>'}</td><td><span class="badge ${tcls(t)}">${t}</span></td><td><i class="ti ti-chevron-down chevron" id="c-${c.id}"></i></td>`;
+    const t=tier(c);const score=w(c.sc);const mc=implMcap(c);
+    if(t!==lastTier){
+      const sep=document.createElement('tr');sep.className='tier-sep';
+      sep.className='tier-sep'+(t==='SELL'?' tier-sep-fail':'');sep.innerHTML=`<td colspan="9">${TL[t]}</td>`;
+      tbody.appendChild(sep);lastTier=t;
+    }
+    rank++;
+    const hasTh=!!c.bull;
+    const dr=document.createElement('tr');
+    dr.className=`data-row ${trow(t)}`;dr.id=`r-${c.id}`;
+    dr.onclick=()=>tog(c.id,c);
+    dr.innerHTML=`
+      <td style="text-align:right;color:var(--text3);font-size:11px;font-family:var(--mono)">${rank}</td>
+      <td><div class="cname">${c.n}</div></td>
+      <td><span class="csect">${c.sect}</span></td>
+      <td class="price-val">${fmt(c.price)}</td>
+      <td><span class="mcap-val">${mc!==null?fmtMcap(mc):'—'}</span></td>
+      <td>${tr(c.trend)}</td>
+      <td>${c.gp?`<span class="score-val">${score.toFixed(2)}</span>`:'<span style="font-size:11px;color:var(--text3)">n/a</span>'}</td>
+      <td><span class="badge ${tcls(t)}">${t}</span></td>
+      <td><i class="ti ti-chevron-down chevron" id="c-${c.id}"></i></td>`;
     tbody.appendChild(dr);
     const er=document.createElement('tr');er.className='exp-row';
-    const thTab=hasTh?`<button class="tab-btn" id="t-${c.id}-th" onclick="event.stopPropagation();stab('${c.id}','th')">Investment thesis</button>`:'';
-    er.innerHTML=`<td colspan="8"><div class="exp-inner" id="i-${c.id}"><div class="exp-content"><div class="tabs"><button class="tab-btn active" id="t-${c.id}-ov" onclick="event.stopPropagation();stab('${c.id}','ov')">Overview</button><button class="tab-btn" id="t-${c.id}-sc" onclick="event.stopPropagation();stab('${c.id}','sc')">Scorecard</button>${thTab}<button class="tab-btn" id="t-${c.id}-nw" onclick="event.stopPropagation();stab('${c.id}','nw')">News & citations</button></div><div class="tab-pane active" id="p-${c.id}-ov">${buildOv(c)}</div><div class="tab-pane" id="p-${c.id}-sc">${buildSc(c)}</div>${hasTh?`<div class="tab-pane" id="p-${c.id}-th">${buildTh(c)}</div>`:''}<div class="tab-pane" id="p-${c.id}-nw">${buildNw(c)}</div></div></div></td>`;
+    er.innerHTML=`<td colspan="9">${buildExpand(c.id,hasTh)}</td>`;
     tbody.appendChild(er);
   });
 }
+
+function renderMobile(data){
+  const ml=document.getElementById('mobileList');ml.innerHTML='';
+  let lastTier=null,rank=0;
+  data.forEach(c=>{
+    const t=tier(c);const score=w(c.sc);const mc=implMcap(c);const hasTh=!!c.bull;
+    if(t!==lastTier){
+      const lbl=document.createElement('div');
+      lbl.className='tier-label-mob'+(t==='SELL'?' gf-gate-1':'');lbl.textContent=TL[t];
+      ml.appendChild(lbl);lastTier=t;
+    }
+    rank++;
+    const card=document.createElement('div');
+    card.className=`company-card ${trow(t)}`;card.id=`mc-${c.id}`;
+    card.onclick=()=>tog(c.id,c);
+    card.innerHTML=`
+      <div class="card-main">
+        <div class="card-rank">${rank}</div>
+        <div class="card-info">
+          <div class="card-name">${c.n}</div>
+          <div class="card-sect">${c.sect}${!c.gp&&GATE_INFO[c.id]?` <span class="gate-pill gp-${GATE_INFO[c.id].gate}">Gate ${GATE_INFO[c.id].gate} fail</span>`:""}</div>
+        </div>
+        <div class="card-right">
+          <div class="card-price">${fmt(c.price)}</div>
+          <div class="card-badge-wrap"><span class="badge ${tcls(t)}">${t}</span></div>
+        </div>
+        <i class="ti ti-chevron-down card-chevron"></i>
+      </div>
+      <div class="card-metrics">
+        <div class="card-metric"><div class="card-metric-lbl">Impl. cap</div><div class="card-metric-val">${mc!==null?fmtMcap(mc):'—'}</div></div>
+        <div class="card-metric"><div class="card-metric-lbl">3M trend</div><div class="card-metric-val">${tr(c.trend)}</div></div>
+        <div class="card-metric"><div class="card-metric-lbl">Score</div><div class="card-metric-val">${c.gp?score.toFixed(2):'n/a'}</div></div>
+      </div>
+      ${buildExpand(c.id,hasTh)}`;
+    ml.appendChild(card);
+  });
+}
+
 const passed=C.filter(c=>c.gp).length;
 const sCount=C.filter(c=>c.gp&&w(c.sc)>=8.5).length;
+const sellCount=C.filter(c=>!c.gp).length;
 const aCount=C.filter(c=>c.gp&&w(c.sc)>=7.0&&w(c.sc)<8.5).length;
-const failCount=C.filter(c=>!c.gp).length;
+const totalMcap=C.filter(c=>c.gp).reduce((s,c)=>{const m=implMcap(c);return s+(m||0);},0);
 document.getElementById('statsRow').innerHTML=`
 <div class="stat-card"><div class="stat-n">50</div><div class="stat-l">Total companies</div></div>
 <div class="stat-card"><div class="stat-n">${passed}</div><div class="stat-l">Passed all gates</div></div>
-<div class="stat-card"><div class="stat-n">${sCount}</div><div class="stat-l">S tier — strong buy</div></div>
-<div class="stat-card"><div class="stat-n">${aCount}</div><div class="stat-l">A tier — buy</div></div>`;
+<div class="stat-card"><div class="stat-n">${sCount}<span>S</span></div><div class="stat-l">Strong buy tier</div></div>
+<div class="stat-card" style="border-color:rgba(224,75,74,0.25)"><div class="stat-n" style="color:#E04B4A">${sellCount}</div><div class="stat-l">Sell — gate fail</div></div>`;
 applyFilters();
 </script>
 </body>
