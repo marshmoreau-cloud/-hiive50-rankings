@@ -1301,13 +1301,15 @@ function buildNw(c){
   const items=c.news.map(n=>`<div class="news-item"><a class="news-link" href="${n.u}" target="_blank" rel="noopener noreferrer"><div class="news-hl">${n.h} <i class="ti ti-external-link" style="font-size:10px;opacity:.4;vertical-align:1px"></i></div></a><div class="news-meta"><span class="news-source">${n.s}</span><span class="news-date">· ${n.d}</span></div></div>`).join('');
   return`<div class="news-header"><span class="news-header-lbl">${c.news.length} citation${c.news.length>1?'s':''} — tap headline to open source</span></div>${items}`;
 }
-function buildExpand(id,hasTh){
-  const thTab=hasTh?`<button class="tab-btn" id="t-${id}-th" onclick="event.stopPropagation();stab('${id}','th')">Thesis</button>`:'';
-  return`<div class="exp-inner" id="i-${id}"><div class="exp-content"><div class="tabs"><button class="tab-btn active" id="t-${id}-ov" onclick="event.stopPropagation();stab('${id}','ov')">Overview</button><button class="tab-btn" id="t-${id}-sc" onclick="event.stopPropagation();stab('${id}','sc')">Scorecard</button>${thTab}<button class="tab-btn" id="t-${id}-nw" onclick="event.stopPropagation();stab('${id}','nw')">News</button></div><div class="tab-pane active" id="p-${id}-ov"></div><div class="tab-pane" id="p-${id}-sc"></div>${hasTh?`<div class="tab-pane" id="p-${id}-th"></div>`:''}<div class="tab-pane" id="p-${id}-nw"></div></div></div>`;
+function buildExpand(id,hasTh,px){
+  px=px||'';
+  const thTab=hasTh?`<button class="tab-btn" id="t-${px}${id}-th" onclick="event.stopPropagation();stab('${px}${id}','th')">Thesis</button>`:'';
+  return`<div class="exp-inner" id="i-${px}${id}"><div class="exp-content"><div class="tabs"><button class="tab-btn active" id="t-${px}${id}-ov" onclick="event.stopPropagation();stab('${px}${id}','ov')">Overview</button><button class="tab-btn" id="t-${px}${id}-sc" onclick="event.stopPropagation();stab('${px}${id}','sc')">Scorecard</button>${thTab}<button class="tab-btn" id="t-${px}${id}-nw" onclick="event.stopPropagation();stab('${px}${id}','nw')">News</button></div><div class="tab-pane active" id="p-${px}${id}-ov"></div><div class="tab-pane" id="p-${px}${id}-sc"></div>${hasTh?`<div class="tab-pane" id="p-${px}${id}-th"></div>`:''}<div class="tab-pane" id="p-${px}${id}-nw"></div></div></div>`;
 }
 // Lazy-load tab content on first open
-function loadTabContent(c){
-  const id=c.id;const hasTh=!!c.bull;
+function loadTabContent(c,px){
+  px=px||'';
+  const id=px+c.id;const hasTh=!!c.bull;
   const ov=document.getElementById(`p-${id}-ov`);if(ov&&!ov.dataset.loaded){ov.innerHTML=buildOv(c);ov.dataset.loaded='1';}
   const sc=document.getElementById(`p-${id}-sc`);if(sc&&!sc.dataset.loaded){sc.innerHTML=buildSc(c);sc.dataset.loaded='1';}
   if(hasTh){const th=document.getElementById(`p-${id}-th`);if(th&&!th.dataset.loaded){th.innerHTML=buildTh(c);th.dataset.loaded='1';}}
@@ -1322,9 +1324,13 @@ function stab(id,tab){
   });
 }
 function tog(id,c){
-  const inner=document.getElementById(`i-${id}`);
+  // Use 'm-' prefix on mobile so IDs don't clash with the desktop table in the DOM
+  const isMob=window.innerWidth<=768;
+  const px=isMob?'m-':'';
+  const fullId=px+id;
+  const inner=document.getElementById(`i-${fullId}`);
   if(!inner)return;
-  if(expanded&&expanded!==id){
+  if(expanded&&expanded!==fullId){
     const pi=document.getElementById(`i-${expanded}`);
     const pr=document.getElementById(`r-${expanded}`);
     const pc=document.getElementById(`c-${expanded}`);
@@ -1336,12 +1342,12 @@ function tog(id,c){
   }
   const isOpen=inner.classList.contains('open');
   inner.classList.toggle('open',!isOpen);
-  const dr=document.getElementById(`r-${id}`);if(dr)dr.classList.toggle('active',!isOpen);
-  const ch=document.getElementById(`c-${id}`);if(ch)ch.classList.toggle('open',!isOpen);
+  const dr=document.getElementById(`r-${fullId}`);if(dr)dr.classList.toggle('active',!isOpen);
+  const ch=document.getElementById(`c-${fullId}`);if(ch)ch.classList.toggle('open',!isOpen);
   const mc=document.getElementById(`mc-${id}`);
   if(mc){mc.classList.toggle('active',!isOpen);mc.classList.toggle('expanded',!isOpen);const mch=mc.querySelector('.card-chevron');if(mch)mch.classList.toggle('open',!isOpen);}
-  if(!isOpen&&c)loadTabContent(c);
-  expanded=isOpen?null:id;
+  if(!isOpen&&c)loadTabContent(c,px);
+  expanded=isOpen?null:fullId;
 }
 
 function applyFilters(){
@@ -1401,7 +1407,7 @@ function renderDesktop(data){
       <td><i class="ti ti-chevron-down chevron" id="c-${c.id}"></i></td>`;
     tbody.appendChild(dr);
     const er=document.createElement('tr');er.className='exp-row';
-    er.innerHTML=`<td colspan="9">${buildExpand(c.id,hasTh)}</td>`;
+    er.innerHTML=`<td colspan="9">${buildExpand(c.id,hasTh,'')}</td>`;
     tbody.appendChild(er);
   });
 }
@@ -1444,7 +1450,7 @@ function renderMobile(data){
     // Expand panel as a sibling AFTER the card — not inside it.
     const panel=document.createElement('div');
     panel.className='card-exp-panel';
-    panel.innerHTML=buildExpand(c.id,hasTh);
+    panel.innerHTML=buildExpand(c.id,hasTh,'m-');
     ml.appendChild(panel);
   });
 }
